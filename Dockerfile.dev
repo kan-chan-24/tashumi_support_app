@@ -1,0 +1,30 @@
+FROM ruby:4.0.2-slim
+
+# Rails/Active Storageの動作に必要なパッケージをまとめてインストール
+# - build-essential: gemのネイティブ拡張をビルドするためのコンパイラ一式
+# - libsqlite3-dev: sqlite3 gemのビルドに必要なヘッダーファイル
+# - libvips: 画像処理gem(image_processing)が使うライブラリ（Active StorageのVariant機能用）
+# - libyaml-dev: RubyのYAML読み込みに必要
+# - pkg-config, curl, git: 各種ビルド・取得ツール
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libsqlite3-dev \
+    libvips \
+    libyaml-dev \
+    pkg-config \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /rails
+
+# 依存gemの一覧だけ先にコピーしてbundle installする
+# → Gemfileが変わらない限り、この層がキャッシュされてビルドが速くなる
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["bash"]

@@ -1,0 +1,16 @@
+services:
+  web: # ← コンテナに"web"という名前をつける
+    build:
+      context: .
+      dockerfile: Dockerfile.dev # ← Dockerfile.devを使ってビルドする、という指示
+    command: bash -c "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0"
+    volumes: # ← どのフォルダを同期するか
+      - .:/rails
+      - bundle_cache:/usr/local/bundle
+    ports: # ← どのポートを外に公開するか
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+
+volumes:
+  bundle_cache:
