@@ -10,5 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_24_034350) do
+  create_table "free_times", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "day_of_week"
+    t.integer "minutes"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hobbies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "percentage", null: false
+    t.datetime "updated_at", null: false
+  end
 end
