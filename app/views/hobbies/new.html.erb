@@ -1,0 +1,7 @@
+<%= form_with model: @hobby do |form| %>
+  <%= form.label :name, "趣味の名前" %>
+  <%= form.text_field :name %>
+  <%= form.label :percentage, "趣味の割合" %>
+  <%= form.number_field :percentage %>
+  <%= form.submit "登録する" %>
+<% end %>
