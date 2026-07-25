@@ -1,0 +1,12 @@
+<!-- 7曜日分の入力を一括で入れる箱 -->
+<%= form_with url: update_all_free_times_path, method: :patch do |form| %>
+  <!-- 7曜日分のループ処理 -->
+  <% @free_times.each do |ft|  %>
+    <!-- 曜日名の表示 -->
+    <%= ft.day_name %>
+    <!-- 自由時間（分数）の入力欄 -->
+    <%= number_field_tag "free_times[#{ft.id}][minutes]",ft.minutes %>
+  <% end %>  
+  <!-- 送信ボタン(一括更新パスへ）-->
+  <%= form.submit "更新する" %>
+<% end %>
