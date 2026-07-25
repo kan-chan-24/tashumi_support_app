@@ -1,9 +1,8 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# 7曜日分ループをまわす
+FreeTime::DAYS.each_index do |index|
+  # day_of_weekカラムのレコードが存在するかチェック（存在しない = 初期化処理）
+  FreeTime.find_or_create_by!(day_of_week: index) do |ft|
+    # 今のループで扱っている曜日レコードのminutesに0をセットする（初期化）
+    ft.minutes = 0
+  end
+end
