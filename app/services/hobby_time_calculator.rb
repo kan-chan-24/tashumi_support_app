@@ -1,4 +1,7 @@
 class HobbyTimeCalculator
+ # 自由時間が足りない場合のエラーを定義（特別な処理は特になし）
+ class NotEnoughFreeTimeError < StandardError; end
+
  # new時に引数をインスタンス変数に変換
  def initialize(hobbies:, free_times:)
   # 趣味の割合
@@ -16,8 +19,11 @@ class HobbyTimeCalculator
 
  # 計算処理の入り口（クラス内部のメソッド呼び出し役）
  def call
-  # step1の呼び出し(total_free_time)
+  # step1の呼び出し(自由時間合計を算出)
   total = total_free_time
+
+  # step2の呼び出し（自由時間合計が分配に足りているかを判定）
+  free_time_sufficient_for_hobbies!(total)
  end
  
  private
@@ -28,5 +34,12 @@ class HobbyTimeCalculator
   @free_times.sum do |ft|
     ft.minutes
   end
- end 
+ end
+
+ # step2:自由時間合計が趣味の数に対して最低限登録されているか
+ def free_time_sufficient_for_hobbies!(total_time)
+  if (@hobbies.length * 15) > total_time
+    raise NotEnoughFreeTimeError, "自由時間を合計#{@hobbies.length * 15}分以上設定してください"  
+  end
+ end
 end
