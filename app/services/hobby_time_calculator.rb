@@ -17,13 +17,16 @@ class HobbyTimeCalculator
  # 計算処理の入り口（クラス内部のメソッド呼び出し役）
  def call
   # step1の呼び出し(total_free_time)
-  
+  total = total_free_time
  end
  
  private
  
  # step1:自由時間の合計を算出
  def total_free_time
- 
+  # free_timeの分数の合計を返す
+  @free_times.sum do |ft|
+    ft.minutes
+  end
  end 
 end
