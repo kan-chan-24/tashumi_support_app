@@ -96,5 +96,8 @@ class HobbyTimeCalculator
   pick_target_times_hash.each do |hobby, info|
     info["確定単位"] += 1
   end
+
+  # 4.7:単位数から時間（分）に変換して返す
+  target_times_hash.transform_values{|info| info["確定単位"] * 15}
  end
 end
