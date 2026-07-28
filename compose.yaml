@@ -3,7 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev # ← Dockerfile.devを使ってビルドする、という指示
-    command: bash -c "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0"
+    command: >
+      sh -c "rm -f tmp/pids/server.pid &&
+             bundle exec rails db:migrate &&
+             tail -f /dev/null"
     volumes: # ← どのフォルダを同期するか
       - .:/rails
       - bundle_cache:/usr/local/bundle

@@ -1,0 +1,21 @@
+<h1 class="text-xl font-bold mt-1 mb-1">登録した趣味一覧</h1>
+<!--  趣味の登録ボタン-->
+<div class="mb-4 border-1 inline-block">
+  <%= link_to "趣味を登録する", new_hobby_path %>
+</div>
+<!-- 趣味の登録がない場合 -->
+<% if @hobbies.empty? %>
+  <p>趣味を登録してください</p>
+<!-- 趣味の登録がある場合 -->
+<% else %>
+  <ul>
+    <% @hobbies.each do |hobby| %>
+      <li class="mb-4">
+        <%= hobby.name %>
+        <%= "#{hobby.percentage} %" %>
+        <!-- 削除ボタン -->
+        <%= button_to "削除", hobby_path(hobby), method: :delete %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

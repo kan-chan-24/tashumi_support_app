@@ -1,0 +1,18 @@
+<div>
+  <%= form_with model: @hobby do |form| %>
+    <div class="mb-2">
+      <%= form.label :name, "趣味の名前" %>
+      <div class="border-1 inline-block "><%= form.text_field :name %></div>
+    </div>
+    <div class="mb-2">
+      <%= form.label :percentage, "趣味の割合" %>
+      <div class="border-1 inline-block "><%= form.number_field :percentage %></div>
+    </div>
+    <div class="mb-2">
+      <div class="border-1 inline-block "><%= form.submit "登録する" %></div>
+    </div>
+    <div>
+      <div class="border-1 inline-block"><%= link_to "戻る", hobbies_path %></div>
+    </div>
+  <% end %>
+</div>
