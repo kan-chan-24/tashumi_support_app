@@ -28,6 +28,8 @@ class HobbyTimeCalculator
   # step3の呼び出し（各趣味の丸め前の目標時間を出す）
   target_times = target_times_calculator(total)
 
+  # step4の呼び出し(各趣味の丸め後の目標時間を出す）
+  adjust_target_times = target_times_adjuster(total,target_times)
  end
  
  private
@@ -53,6 +55,26 @@ class HobbyTimeCalculator
   @hobbies.each_with_object({}) do |hobby, hash|
     # 自由時間合計 * 配分％ = 各趣味の目標時間（小数点ありで返り値を出す）
     hash[hobby] = total_time * (hobby.percentage / 100.0)
+  end
+ end
+ 
+ # step4:各趣味の目標時間の丸め処理（15分単位で値を扱いやすくする）
+ def target_times_adjuster(total_time,target_times)
+  # 全体の目標単位を出す(割り切れる数字）
+  total_quarter_hour_count = total_time / 15
+
+  # 各趣味の単位数を出し、ローカル変数へ入れる（確定部分と端数で分ける）
+  target_times_hash = target_times.each_with_object({}) do |(hobby,time), hash|
+    # 暫定で小数点のついた単位を出す
+    float_quarter_hour_count = time / 15
+    
+    # 単位確定部分として整数部分を抜き出す
+    int_quarter_hour_count = float_quarter_hour_count.truncate
+
+    # 端数部分を抜き出す（比較に使う）
+    float_quarter_hour_count = float_quarter_hour_count - int_quarter_hour_count
+
+    hash[hobby] = {"確定単位" => int_quarter_hour_count, "端数" => float_quarter_hour_count}
   end
  end
 end
