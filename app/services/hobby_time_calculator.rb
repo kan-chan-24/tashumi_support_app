@@ -60,10 +60,10 @@ class HobbyTimeCalculator
  
  # step4:各趣味の目標時間の丸め処理（15分単位で値を扱いやすくする）
  def target_times_adjuster(total_time,target_times)
-  # 全体の目標単位を出す(割り切れる数字）
+  # 4.1:全体の目標単位を出す(割り切れる数字）
   total_quarter_hour_count = total_time / 15
 
-  # 各趣味の単位数を出し、ローカル変数へ入れる（確定部分と端数で分ける）
+  # 4.2:各趣味の単位数を出し、ローカル変数へ入れる（確定部分と端数で分ける）
   target_times_hash = target_times.each_with_object({}) do |(hobby,time), hash|
     # 暫定で小数点のついた単位を出す
     float_quarter_hour_count = time / 15
@@ -75,6 +75,26 @@ class HobbyTimeCalculator
     float_quarter_hour_count = float_quarter_hour_count - int_quarter_hour_count
 
     hash[hobby] = {"確定単位" => int_quarter_hour_count, "端数" => float_quarter_hour_count}
+  end
+
+  # 4.3:各趣味の目標単位の確定部分(整数部）合計を出す
+  total_int_quarter_hour_count = target_times_hash.values.sum do |info|
+    info["確定単位"]
+  end
+  
+  # 4.4:余っている単位を出す（全体の単位数 - 確定単位数）
+  remaining_int_quarter_hour_count = total_quarter_hour_count - total_int_quarter_hour_count
+
+  # 4.5:端数を数値が大きい順にソートする
+  sort_target_times_hash = target_times_hash.sort_by{|hobby, info|[-info["端数"], -hobby.percentage, hobby.id]}
+  
+  # 4.6:ソートした上から順に、余った単位を確定単位に+1していく
+  # 余った単位数分のハッシュを取り出す
+  pick_target_times_hash = sort_target_times_hash.first(remaining_int_quarter_hour_count)
+
+  # 確定単位に+1していく
+  pick_target_times_hash.each do |hobby, info|
+    info["確定単位"] += 1
   end
  end
 end
