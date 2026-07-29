@@ -30,6 +30,9 @@ class HobbyTimeCalculator
 
   # step4の呼び出し(各趣味の丸め後の目標時間を出す）
   adjust_target_times = target_times_adjuster(total,target_times)
+  
+  # step5の呼び出し（0分趣味の救済措置）
+  rescue_zero_hobbies(adjust_target_times)
  end
  
  private
@@ -99,5 +102,25 @@ class HobbyTimeCalculator
 
   # 4.7:単位数から時間（分）に変換して返す
   target_times_hash.transform_values{|info| info["確定単位"] * 15}
+ end
+
+ # step5:0分の趣味の時間があった場合の救済措置（15分分配）
+ def rescue_zero_hobbies(target_times)
+  # 趣味の目標時間の値に、0が存在する間繰り返す
+  while target_times.value?(0)
+    # 0分の趣味を1つ見つける
+    zero_hobby, _ = target_times.find{|hobby, time| time == 0}
+
+    # 趣味目標時間をソート（時間が多い順、同値なら%昇順、さらに同値ならid降順）
+    sort_target_times = target_times.sort_by{|hobby, time|[-time, hobby.percentage, -hobby.id]}
+    # ソートしたtarget_timesから、Top1を抜き取る
+    top_hobby, _ = sort_target_times.first
+
+    # リストの一番上の目標時間を-15分
+    target_times[top_hobby] -= 15
+    # 0分の目標時間に+15分
+    target_times[zero_hobby] += 15
+  end
+  target_times
  end
 end
