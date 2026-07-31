@@ -45,5 +45,38 @@ class PattertnCCalculator.rb
       # データ構造：{Hobbyオブジェクト => {}}この空いた{}にデータを詰めていく
       hash[hobby] = {}
     end
+
+    while day_index < sort_days.length # これからループ条件を埋めていく
+      # 現在見ている曜日の更新（初期値は0）（趣味は一曜日ずつ網羅的に見ていく）
+      current_day = sort_days[day_index] 
+
+      # 一日の理想配分を求める(残り目標時間 * （1日の自由時間合計 / １週間の自由時間合計）)
+      allocate_hobbytime = hobby_all.each_with_object({}) do |hobby, hash|
+        # データ構造：{Hobbyオブジェクト => 46.6..., Hobbyオブジェクト => 36.6...,}のイメージ
+        hash[hobby] = target_times_slot[hobby] * (schedule_slot[current_day] / sort_days.sum(:minutes))
+      end
+      
+      # 丸め処理を行う（救済処置は不要）
+      # hobby_time_calculatorメソッドを呼びたいが、0分救済がいらないので分岐する方法を知りたい
+      adjust_target_times = # 丸め処理(allocate_hobbytime)
+      
+      # 配分時間を引き、残りの目標時間を出す
+      target_times_slot.each do |hobby, hash|
+        # 現在のHobbyオブジェクトの値(slot側) - 現在のHobbyオブジェクトの値(adjust側)
+        target_time_slot[hobby] -= adjust_target_times[hobby]
+      end
+
+      # スケジュールスロット（返り値）に分配時間を入れていく
+      hobby_schedule.each_with_object do |hobby, hash|
+        # データ構造：{Hobbyオブジェクト => {"月" => 30},Hobbyオブジェクト => {"月" => 15},...} 
+        hobby_schedule[hobby][current_day] = adjust_target_times[hobby]
+      end
+
+      # 曜日添字の更新
+      day_index += 1
+    end
+    
+    # 最後に完成したスケジュールを返す
+    hobby_schedule
   end
 end
