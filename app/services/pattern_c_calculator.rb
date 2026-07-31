@@ -1,6 +1,6 @@
 class PattertnCCalculator.rb
   def initialize(target_times:)
-    # 目標時間をインスタンス変数化
+    # 目標時間をインスタンス変数に変換
     @target_ties = target_times
   end
 
