@@ -1,7 +1,7 @@
-class PattertnCCalculator.rb
+class PatternCCalculator
   def initialize(target_times:)
     # 目標時間をインスタンス変数に変換
-    @target_ties = target_times
+    @target_times = target_times
   end
 
   def self.call(target_times:)
@@ -16,9 +16,9 @@ class PattertnCCalculator.rb
 
   private
 
-  def pattertn_c_calculator
+  def pattern_c_calculator
     # 趣味と自由時間を全件リストで取得
-    hobby_all = Hooby.all
+    hobby_all = Hobby.all
     freetime_all = FreeTime.all
 
     # 曜日のソートを行う（day_of_weekの昇順：同値はないので第二条件なし）
@@ -28,13 +28,13 @@ class PattertnCCalculator.rb
     sort_hobbies = hobby_all.sort_by { |hobby|[ -hobby.percentage, hobby.id ] }
 
     # １週間分の曜日スロットを作成（曜日の残り枠として管理する）
-    days_slot = freetime.all.each_with_object({}) do |ft, hash|
+    days_slot = freetime_all.each_with_object({}) do |ft, hash|
       # データ構造：{ FreeTimeオブジェクト => 120min, FreeTimeオブジェクト => 90, ... }
       hash[ft] = ft.minutes
     end
     
     # 各趣味の目標時間スロットを用意（目標時間の残り枠として管理する）
-    target_times_slot = @taget_time.dup
+    target_times_slot = @target_time.dup
 
     # 曜日と趣味用の添字を用意する
     day_index = 0
@@ -53,7 +53,7 @@ class PattertnCCalculator.rb
       # 一日の理想配分を求める(残り目標時間 * （1日の自由時間合計 / １週間の自由時間合計）)
       allocate_hobbytime = hobby_all.each_with_object({}) do |hobby, hash|
         # データ構造：{Hobbyオブジェクト => 46.6..., Hobbyオブジェクト => 36.6...,}のイメージ
-        hash[hobby] = target_times_slot[hobby] * (schedule_slot[current_day] / sort_days.sum(:minutes))
+        hash[hobby] = target_times_slot[hobby] * (days_slot[current_day] / sort_days.sum(:minutes))
       end
       
       # 丸め処理を行う（救済処置は不要）
@@ -63,11 +63,11 @@ class PattertnCCalculator.rb
       # 配分時間を引き、残りの目標時間を出す
       target_times_slot.each do |hobby, hash|
         # 現在のHobbyオブジェクトの値(slot側) - 現在のHobbyオブジェクトの値(adjust側)
-        target_time_slot[hobby] -= adjust_target_times[hobby]
+        target_times_slot[hobby] -= adjust_target_times[hobby]
       end
 
       # スケジュールスロット（返り値）に分配時間を入れていく
-      hobby_schedule.each_with_object do |hobby, hash|
+      hobby_schedule.each do |hobby, hash|
         # データ構造：{Hobbyオブジェクト => {"月" => 30},Hobbyオブジェクト => {"月" => 15},...} 
         hobby_schedule[hobby][current_day] = adjust_target_times[hobby]
       end
