@@ -29,7 +29,7 @@ class PatternCCalculator
       # データ構造：{ FreeTimeオブジェクト => 120min, FreeTimeオブジェクト => 90, ... }
       hash[ft] = ft.minutes
     end
-    
+
     # 各趣味の目標時間スロットを用意（目標時間の残り枠として管理する）
     target_times_slot = @target_times.dup
 
@@ -47,20 +47,20 @@ class PatternCCalculator
       current_day = sort_days[day_index]
 
       # 計算を終えた曜日を抜いたsort_daysを変数へ保存
-      future_sumdays = sort_days.drop(day_index) 
+      future_sumdays = sort_days.drop(day_index)
 
       # 一日の理想配分を求める(残り目標時間 * （1日の自由時間合計.to_f / １週間の"残り"自由時間合計）)
       allocate_hobbytime = hobby_all.each_with_object({}) do |hobby, hash|
         # データ構造：{Hobbyオブジェクト => 46.6..., Hobbyオブジェクト => 36.6...,}のイメージ
         hash[hobby] = target_times_slot[hobby] * (days_slot[current_day].to_f / future_sumdays.sum(&:minutes))
       end
-      
+
       # 丸め処理用のタイブレークproc
-      hobby_tiebreak = ->(hobby) {[-hobby.percentage, hobby.id]}
+      hobby_tiebreak = ->(hobby) { [ -hobby.percentage, hobby.id ] }
 
       # 丸め処理を行う（救済処置はしない）
-      adjust_target_times = TargetTimesAdjuster.call(total_time: days_slot[current_day],target_times: allocate_hobbytime, tiebreaker: hobby_tiebreak )
-      
+      adjust_target_times = TargetTimesAdjuster.call(total_time: days_slot[current_day], target_times: allocate_hobbytime, tiebreaker: hobby_tiebreak)
+
       # 配分時間を引き、残りの目標時間を出す
       target_times_slot.each do |hobby, hash|
         # 現在のHobbyオブジェクトの値(slot側) - 現在のHobbyオブジェクトの値(adjust側)
@@ -69,14 +69,14 @@ class PatternCCalculator
 
       # スケジュールスロット（返り値）に分配時間を入れていく
       hobby_schedule.each do |hobby, hash|
-        # データ構造：{Hobbyオブジェクト => {"月" => 30},Hobbyオブジェクト => {"月" => 15},...} 
+        # データ構造：{Hobbyオブジェクト => {"月" => 30},Hobbyオブジェクト => {"月" => 15},...}
         hobby_schedule[hobby][current_day] = adjust_target_times[hobby]
       end
 
       # 曜日添字の更新
       day_index += 1
     end
-    
+
     # 最後に完成したスケジュールを返す
     hobby_schedule
   end

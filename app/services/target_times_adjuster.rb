@@ -1,5 +1,4 @@
 class TargetTimesAdjuster
-
   def initialize(total_time:, target_times:, tiebreaker:)
     @total_time = total_time
     @target_times = target_times
@@ -24,16 +23,16 @@ class TargetTimesAdjuster
     target_times_hash = @target_times.each_with_object({}) do |(obj, time), hash|
       # 暫定で小数点のついた単位を出す
       float_quarter_hour_count = time / 15
- 
+
       # 単位確定部分として整数部分を抜き出す
       int_quarter_hour_count = float_quarter_hour_count.truncate
 
       # 端数部分を抜き出す（比較に使う）
       float_quarter_hour_count = float_quarter_hour_count - int_quarter_hour_count
- 
+
       hash[obj] = { "確定単位" => int_quarter_hour_count, "端数" => float_quarter_hour_count }
     end
-    
+
     # 4.3:各趣味の目標単位の確定部分(整数部）合計を出す
     total_int_quarter_hour_count = target_times_hash.values.sum do |info|
       info["確定単位"]
@@ -48,7 +47,7 @@ class TargetTimesAdjuster
     # 4.6:ソートした上から順に、余った単位を確定単位に+1していく
     # 余った単位数分のハッシュを取り出す
     pick_target_times_hash = sort_target_times_hash.first(remaining_int_quarter_hour_count)
- 
+
     # 確定単位に+1していく
     pick_target_times_hash.each do |obj, info|
       info["確定単位"] += 1

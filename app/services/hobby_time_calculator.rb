@@ -29,8 +29,8 @@ class HobbyTimeCalculator
   target_times = target_times_calculator(total)
 
   # TargetTimesAdjuster(丸め処理）に渡すprocメソッド
-  hobby_tiebreak = ->(hobby) {[-hobby.percentage, hobby.id]}
-  
+  hobby_tiebreak = ->(hobby) { [ -hobby.percentage, hobby.id ] }
+
   # step4の呼び出し(各趣味の丸め後の目標時間を出す）
   adjust_target_times = TargetTimesAdjuster.call(total_time: total, target_times: target_times, tiebreaker: hobby_tiebreak)
 
