@@ -34,5 +34,22 @@ class PatternDeCalculator
 
     # 同値グループ化（前後で同値の曜日をグループ化する）
     chunk_days = sort_days.chunk_while { |i, j| i.minutes == j.minutes }.to_a
+
+    # １週間分の曜日スロットを作成（曜日の残り枠として管理する）
+    days_slot = freetime_all.each_with_object({}) do |ft, hash|
+      # データ構造：{ FreeTimeオブジェクト => 120min, FreeTimeオブジェクト => 90, .    .. }
+      hash[ft] = ft.minutes
+    end
+    
+    # 各趣味の目標時間スロットを用意（目標時間の残り枠として管理する）
+    target_times_slot = @target_times.dup
+  end
+
+  def fair_share_test(remaining_time, group, days_slot)
+    # 枠が残っている曜日の数を数える
+    group_count = group.count { |gp| days_slot[gp] > 0 }
+
+    # フェアシェアを計算する
+    fair_share = remaining_time.to_f / group_count
   end
 end
