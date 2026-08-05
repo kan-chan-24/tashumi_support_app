@@ -43,6 +43,32 @@ class PatternDeCalculator
     
     # 各趣味の目標時間スロットを用意（目標時間の残り枠として管理する）
     target_times_slot = @target_times.dup
+
+    
+    # ループで使用する添字を定義
+    chunk_index = 0
+
+    # 1.同値グループの配列から順番にグループを取得する
+    current_chunk = chunk_days[chunk_index]
+
+    # 2.同値グループの先頭の.minutesをグループの代表値とする
+    chunk_minutes = current_chunk.first.minutes
+
+    # 3.配列の中で残り時間が1以上で、一番先頭にある趣味を取得
+    chunk_hobby = sort_hobbies.find{  |hobby| target_times_slot[hobby] > 0 }
+
+    # 4.フェアシェア計算処理を呼び出す
+    fairshare = fair_share_test(target_times_slot[chunk_hobby], current_chunk, days_slot)
+    
+    puts chunk_minutes
+    puts fairshare
+
+    # 5.フェアシェアが代表値に収まるかチェック
+    if fairshare <= chunk_minutes
+   
+    else
+   
+    end
   end
 
   def fair_share_test(remaining_time, group, days_slot)
