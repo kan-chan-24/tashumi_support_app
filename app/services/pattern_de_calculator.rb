@@ -44,7 +44,11 @@ class PatternDeCalculator
     # 各趣味の目標時間スロットを用意（目標時間の残り枠として管理する）
     target_times_slot = @target_times.dup
 
-    
+    # 最終的な返り値になるスケジュールスロットを作成
+    hobby_schedule = hobby_all.each_with_object({}) do |hobby, hash|
+      hash[hobby] = {}
+    end
+
     # ループで使用する添字を定義
     chunk_index = 0
 
@@ -58,20 +62,39 @@ class PatternDeCalculator
     chunk_hobby = sort_hobbies.find{  |hobby| target_times_slot[hobby] > 0 }
 
     # 4.フェアシェア計算処理を呼び出す
-    fairshare = fair_share_test(target_times_slot[chunk_hobby], current_chunk, days_slot)
-    
-    puts chunk_minutes
-    puts fairshare
+    fairshare = fair_share_calculator(target_times_slot[chunk_hobby], current_chunk, days_slot)
 
     # 5.フェアシェアが代表値に収まるかチェック
     if fairshare <= chunk_minutes
-   
+      # 曜日に紐づけたフェアシェア同値のハッシュを用意する
+      days_fairshare = current_chunk.each_with_object({}) do |ft, hash|
+        hash[ft] = fairshare
+      end
+      
+      # TargetTimesAdjusterに渡すためのタイブレーク条件を用意
+      freetime_tiebreak = ->(ft) { [ ft.day_of_week ] }
+ 
+      # 丸め処理を呼び出し
+      adjust_target_times  = TargetTimesAdjuster.call(total_time: target_times_slot[chunk_hobby], target_times: days_fairshare, tiebreaker: freetime_tiebreak)
+
+      # 丸めた結果をスケジュールに割り当てる
+      adjust_target_times.each do |ft, minutes|
+        # 趣味キーのスケジュールに曜日=>分の形で丸め後の目標時間を割り当てる
+        hobby_schedule[chunk_hobby][ft] = minutes
+
+        # 曜日ごとの自由時間を配分した分数だけ減らす
+        days_slot[ft] -= minutes
+          
+        # 趣味ごとの目標時間を配分した分数だけ減らす
+        target_times_slot[chunk_hobby] -= minutes
+      end
     else
    
     end
   end
 
-  def fair_share_test(remaining_time, group, days_slot)
+  # フェアシェアの計算メソッド
+  def fair_share_calculator(remaining_time, group, days_slot)
     # 枠が残っている曜日の数を数える
     group_count = group.count { |gp| days_slot[gp] > 0 }
 
