@@ -119,6 +119,12 @@ class PatternDeCalculator
           current_ft = current_chunk[day_index]
           # 首位趣味と次点趣味（残り時間が存在している）を取得し、ツートップとしてまとめる
           twotop_hobbies = sort_hobbies.select{ |hobby| target_times_slot[hobby] > 0 }.first(2)
+          # 次点趣味を取得できたかをチェックする（次点がない場合比率分割ができないため）
+          if twotop_hobbies.length < 2
+            # 趣味配列の要素数が2未満（つまり2つの趣味が取得できてない）ならループを抜ける
+            break
+          end
+
           # 「首位趣味％：次点趣味％」の比率で2趣味を割り、丸め前の単位を出す
           allocate_hobbytimes = twotop_hobbies.each_with_object({}) do |hobby, hash|
             hash[hobby] = days_slot[current_ft]*((hobby.percentage / 100.0) /((twotop_hobbies[0].percentage/100.0)+(twotop_hobbies[1].percentage/100.0)))
