@@ -92,8 +92,17 @@ class PatternDeCalculator
             fairshare_scheduler(chunk: dup_chunk, fair_share: re_fairshare, chunk_hobby: chunk_hobby, days_slot: days_slot, target_times_slot: target_times_slot, hobby_schedule_hash: hobby_schedule[chunk_hobby])
           else
             # 収まらない場合：最小曜日だけを確定させ、対象曜日リストから取り除く
-
-
+            
+            # 最小値を保存
+            min_minutes = days_slot[min_chunk_ft]
+            # 現在の残り時間いっぱいにスケジュールを埋める
+            hobby_schedule[chunk_hobby][min_chunk_ft] = min_minutes
+            # 曜日の残り自由時間を減らす
+            days_slot[min_chunk_ft] -= min_minutes
+            # 趣味の残り目標時間を減らす
+            target_times_slot[chunk_hobby] -= min_minutes
+            # 対象曜日リストから、現在の曜日を取り除く
+            dup_chunk.delete(min_chunk_ft)
           end
         end
       end
