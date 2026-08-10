@@ -70,7 +70,7 @@ class PatternDeCalculator
       if fairshare <= chunk_minutes
         # 現在のグループ内最小の残り時間を取得
         min_chunk_ft = current_chunk.min_by{ |ft| days_slot[ft] }
-        
+       
         # フェアシェアがグループ内の最小残り時間に収まるかどうか
         if fairshare <= days_slot[min_chunk_ft]
           # 収まる場合：グループの全日にフェアシェアを丸め処理して配分
@@ -135,12 +135,37 @@ class PatternDeCalculator
           adjust_target_times = TargetTimesAdjuster.call(total_time: days_slot[current_ft], target_times: allocate_hobbytimes, tiebreaker: hobby_tiebreak)
           
           # 次点の丸め結果（配分したい時間）に、次点趣味の残り目標時間が足りるかをみる
-          if adjust_target_times[twotop_hobbies[1]] >= target_times_slot[twotop_hobbies[1]]
+          if adjust_target_times[twotop_hobbies[1]] <= target_times_slot[twotop_hobbies[1]]
             # 足りた場合：首位・次点それぞれの配分額を割り当てる
 
+            # 首位趣味の配分時間を現在の曜日スケジュールに割り当てる
+            hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]]
+            # 次点趣味の配分時間を現在の曜日スケジュールに割り当てる
+            hobby_schedule[twotop_hobbies[1]][current_ft] = adjust_target_times[twotop_hobbies[1]]
+
+            # 曜日側の残り時間を減らす
+            days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]] 
+
+            # 趣味側の残り時間を減らす
+            target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]]
+            target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]]
           else
             # 足りなかった場合：次点は残り全部の目標時間を割り当て、足りない分は首位に肩代わりさせる
+            
+            # 次点趣味の残り目標時間全部をスケジュールスロットへ割り当てる
+            hobby_schedule[twotop_hobbies[1]][current_ft] = target_times_slot[twotop_hobbies[1]]
+            # 次点趣味の割り当てに足りなかった時間を求める
+            share_time = adjust_target_times[twotop_hobbies[1]] - target_times_slot[twotop_hobbies[1]]
 
+            # 首位趣味の最終割り当て時間を出して、スケジュールスロットへ割り当てる
+            hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]] + share_time
+
+            # 曜日の自由時間スロットを割り当てた分減らす
+            days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]]
+            # 首位趣味の残り時間スロットを割り当て分減らす
+            target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]] + share_time
+            # 次点趣味の残り時間スロットを割り当て分減らす（0になる）
+            target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]] - share_time
           end
 
           # 最後にグループ内の曜日管理用の添字を追加する
