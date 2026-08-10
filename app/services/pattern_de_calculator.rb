@@ -51,130 +51,133 @@ class PatternDeCalculator
 
     # ループで使用する添字を定義
     chunk_index = 0
-
-    # 1.同値グループの配列から順番にグループを取得する
-    current_chunk = chunk_days[chunk_index]
-
-    # 2.同値グループの先頭の.minutesをグループの代表値とする
-    chunk_minutes = current_chunk.first.minutes
     
-    # 3.配列の中で残り時間が1以上で、一番先頭にある趣味を取得
-    chunk_hobby = sort_hobbies.find{ |hobby| target_times_slot[hobby] > 0 }
+    # 同値グループが全て処理できるまで繰り返す
+    while chunk_index < chunk_days.length
+      # 1.同値グループの配列から順番にグループを取得する
+      current_chunk = chunk_days[chunk_index]
 
-    # 現在見ている趣味の残り時間がある && グループ内の残り枠がある
-    while chunk_hobby && current_chunk.any?{ |ft| days_slot[ft] > 0 }
-      # 4.フェアシェア計算処理を呼び出す
-      fairshare = fair_share_calculator(target_times_slot[chunk_hobby], current_chunk, days_slot)
+      # 2.同値グループの先頭の.minutesをグループの代表値とする
+      chunk_minutes = current_chunk.first.minutes
+      
+      # 3.配列の中で残り時間が1以上で、一番先頭にある趣味を取得
+      chunk_hobby = sort_hobbies.find{ |hobby| target_times_slot[hobby] > 0 }
 
-      # 5.フェアシェアが代表値に収まるかチェック
-      if fairshare <= chunk_minutes
-        # 現在のグループ内最小の残り時間を取得
-        min_chunk_ft = current_chunk.min_by{ |ft| days_slot[ft] }
-       
-        # フェアシェアがグループ内の最小残り時間に収まるかどうか
-        if fairshare <= days_slot[min_chunk_ft]
-          # 収まる場合：グループの全日にフェアシェアを丸め処理して配分
-          fairshare_scheduler(chunk: current_chunk, fair_share: fairshare, chunk_hobby: chunk_hobby, days_slot: days_slot, target_times_slot: target_times_slot, hobby_schedule_hash: hobby_schedule[chunk_hobby])
-                    
-        else
-          # カスケード処理
-          
-          # グループ内の確定曜日チェックリスト（割り当て時間が決まった曜日から取り除いていく）
-          dup_chunk = current_chunk.dup
-          # 対象曜日が残っている かつ 趣味残り時間が残っている
-          while !dup_chunk.empty? && target_times_slot[chunk_hobby] > 0
-            # 対象曜日リストの中で最小残り時間の曜日を探す（返り値はfreetimeオブジェクト)
-            min_chunk_ft = dup_chunk.min_by{ |ft| days_slot[ft] }
-            # フェアシェアの再計算をループごとに行う
-            re_fairshare = fair_share_calculator(target_times_slot[chunk_hobby], dup_chunk, days_slot)
+      # 現在見ている趣味の残り時間がある && グループ内の残り枠がある
+      while chunk_hobby && current_chunk.any?{ |ft| days_slot[ft] > 0 }
+        # 4.フェアシェア計算処理を呼び出す
+        fairshare = fair_share_calculator(target_times_slot[chunk_hobby], current_chunk, days_slot)
 
-            # フェアシェアと最小残り時間曜日を比較
-            if re_fairshare <= days_slot[min_chunk_ft]
-              # 収まる場合：均等配分
-              fairshare_scheduler(chunk: dup_chunk, fair_share: re_fairshare, chunk_hobby: chunk_hobby, days_slot: days_slot, target_times_slot: target_times_slot, hobby_schedule_hash: hobby_schedule[chunk_hobby])
-            else
-              # 収まらない場合：最小曜日だけを確定させ、対象曜日リストから取り除く
-              
-              # 最小値を保存
-              min_minutes = days_slot[min_chunk_ft]
-              # 現在の残り時間いっぱいにスケジュールを埋める
-              hobby_schedule[chunk_hobby][min_chunk_ft] = min_minutes
-              # 曜日の残り自由時間を減らす
-              days_slot[min_chunk_ft] -= min_minutes
-              # 趣味の残り目標時間を減らす
-              target_times_slot[chunk_hobby] -= min_minutes
-              # 対象曜日リストから、現在の曜日を取り除く
-              dup_chunk.delete(min_chunk_ft)
+        # 5.フェアシェアが代表値に収まるかチェック
+        if fairshare <= chunk_minutes
+          # 現在のグループ内最小の残り時間を取得
+          min_chunk_ft = current_chunk.min_by{ |ft| days_slot[ft] }
+         
+          # フェアシェアがグループ内の最小残り時間に収まるかどうか
+          if fairshare <= days_slot[min_chunk_ft]
+            # 収まる場合：グループの全日にフェアシェアを丸め処理して配分
+            fairshare_scheduler(chunk: current_chunk, fair_share: fairshare, chunk_hobby: chunk_hobby, days_slot: days_slot, target_times_slot: target_times_slot, hobby_schedule_hash: hobby_schedule[chunk_hobby])
+                      
+          else
+            # カスケード処理
+            
+            # グループ内の確定曜日チェックリスト（割り当て時間が決まった曜日から取り除いていく）
+            dup_chunk = current_chunk.dup
+            # 対象曜日が残っている かつ 趣味残り時間が残っている
+            while !dup_chunk.empty? && target_times_slot[chunk_hobby] > 0
+              # 対象曜日リストの中で最小残り時間の曜日を探す（返り値はfreetimeオブジェクト)
+              min_chunk_ft = dup_chunk.min_by{ |ft| days_slot[ft] }
+              # フェアシェアの再計算をループごとに行う
+              re_fairshare = fair_share_calculator(target_times_slot[chunk_hobby], dup_chunk, days_slot)
+
+              # フェアシェアと最小残り時間曜日を比較
+              if re_fairshare <= days_slot[min_chunk_ft]
+                # 収まる場合：均等配分
+                fairshare_scheduler(chunk: dup_chunk, fair_share: re_fairshare, chunk_hobby: chunk_hobby, days_slot: days_slot, target_times_slot: target_times_slot, hobby_schedule_hash: hobby_schedule[chunk_hobby])
+              else
+                # 収まらない場合：最小曜日だけを確定させ、対象曜日リストから取り除く
+                
+                # 最小値を保存
+                min_minutes = days_slot[min_chunk_ft]
+                # 現在の残り時間いっぱいにスケジュールを埋める
+                hobby_schedule[chunk_hobby][min_chunk_ft] = min_minutes
+                # 曜日の残り自由時間を減らす
+                days_slot[min_chunk_ft] -= min_minutes
+                # 趣味の残り目標時間を減らす
+                target_times_slot[chunk_hobby] -= min_minutes
+                # 対象曜日リストから、現在の曜日を取り除く
+                dup_chunk.delete(min_chunk_ft)
+              end
             end
           end
-        end
-      else
-        # 現在の首位趣味と次点趣味の比率でグループ内の枠を分ける
-        
-        # グループ内の曜日を管理する添字
-        day_index = 0
-        # グループ内の曜日が存在するうちは繰り返す
-        while day_index < current_chunk.length
-          # 現在見ている曜日を明確にする
-          current_ft = current_chunk[day_index]
-          # 首位趣味と次点趣味（残り時間が存在している）を取得し、ツートップとしてまとめる
-          twotop_hobbies = sort_hobbies.select{ |hobby| target_times_slot[hobby] > 0 }.first(2)
-          # 次点趣味を取得できたかをチェックする（次点がない場合比率分割ができないため）
-          if twotop_hobbies.length < 2
-            # 趣味配列の要素数が2未満（つまり2つの趣味が取得できてない）ならループを抜ける
-            break
-          end
-
-          # 「首位趣味％：次点趣味％」の比率で2趣味を割り、丸め前の単位を出す
-          allocate_hobbytimes = twotop_hobbies.each_with_object({}) do |hobby, hash|
-            hash[hobby] = days_slot[current_ft]*((hobby.percentage / 100.0) /((twotop_hobbies[0].percentage/100.0)+(twotop_hobbies[1].percentage/100.0)))
-          end
-          # 丸め処理ようのproc
-          hobby_tiebreak = ->(hobby) { [ -hobby.percentage, hobby.id ] }
-          # 首位趣味と次点趣味の丸め前の単位を渡す
-          adjust_target_times = TargetTimesAdjuster.call(total_time: days_slot[current_ft], target_times: allocate_hobbytimes, tiebreaker: hobby_tiebreak)
+        else
+          # 現在の首位趣味と次点趣味の比率でグループ内の枠を分ける
           
-          # 次点の丸め結果（配分したい時間）に、次点趣味の残り目標時間が足りるかをみる
-          if adjust_target_times[twotop_hobbies[1]] <= target_times_slot[twotop_hobbies[1]]
-            # 足りた場合：首位・次点それぞれの配分額を割り当てる
+          # グループ内の曜日を管理する添字
+          day_index = 0
+          # グループ内の曜日が存在するうちは繰り返す
+          while day_index < current_chunk.length
+            # 現在見ている曜日を明確にする
+            current_ft = current_chunk[day_index]
+            # 首位趣味と次点趣味（残り時間が存在している）を取得し、ツートップとしてまとめる
+            twotop_hobbies = sort_hobbies.select{ |hobby| target_times_slot[hobby] > 0 }.first(2)
+            # 次点趣味を取得できたかをチェックする（次点がない場合比率分割ができないため）
+            if twotop_hobbies.length < 2
+              # 趣味配列の要素数が2未満（つまり2つの趣味が取得できてない）ならループを抜ける
+              break
+            end
 
-            # 首位趣味の配分時間を現在の曜日スケジュールに割り当てる
-            hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]]
-            # 次点趣味の配分時間を現在の曜日スケジュールに割り当てる
-            hobby_schedule[twotop_hobbies[1]][current_ft] = adjust_target_times[twotop_hobbies[1]]
-
-            # 曜日側の残り時間を減らす
-            days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]] 
-
-            # 趣味側の残り時間を減らす
-            target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]]
-            target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]]
-          else
-            # 足りなかった場合：次点は残り全部の目標時間を割り当て、足りない分は首位に肩代わりさせる
+            # 「首位趣味％：次点趣味％」の比率で2趣味を割り、丸め前の単位を出す
+            allocate_hobbytimes = twotop_hobbies.each_with_object({}) do |hobby, hash|
+              hash[hobby] = days_slot[current_ft]*((hobby.percentage / 100.0) /((twotop_hobbies[0].percentage/100.0)+(twotop_hobbies[1].percentage/100.0)))
+            end
+            # 丸め処理ようのproc
+            hobby_tiebreak = ->(hobby) { [ -hobby.percentage, hobby.id ] }
+            # 首位趣味と次点趣味の丸め前の単位を渡す
+            adjust_target_times = TargetTimesAdjuster.call(total_time: days_slot[current_ft], target_times: allocate_hobbytimes, tiebreaker: hobby_tiebreak)
             
-            # 次点趣味の残り目標時間全部をスケジュールスロットへ割り当てる
-            hobby_schedule[twotop_hobbies[1]][current_ft] = target_times_slot[twotop_hobbies[1]]
-            # 次点趣味の割り当てに足りなかった時間を求める
-            share_time = adjust_target_times[twotop_hobbies[1]] - target_times_slot[twotop_hobbies[1]]
+            # 次点の丸め結果（配分したい時間）に、次点趣味の残り目標時間が足りるかをみる
+            if adjust_target_times[twotop_hobbies[1]] <= target_times_slot[twotop_hobbies[1]]
+              # 足りた場合：首位・次点それぞれの配分額を割り当てる
 
-            # 首位趣味の最終割り当て時間を出して、スケジュールスロットへ割り当てる
-            hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]] + share_time
+              # 首位趣味の配分時間を現在の曜日スケジュールに割り当てる
+              hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]]
+              # 次点趣味の配分時間を現在の曜日スケジュールに割り当てる
+              hobby_schedule[twotop_hobbies[1]][current_ft] = adjust_target_times[twotop_hobbies[1]]
 
-            # 曜日の自由時間スロットを割り当てた分減らす
-            days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]]
-            # 首位趣味の残り時間スロットを割り当て分減らす
-            target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]] + share_time
-            # 次点趣味の残り時間スロットを割り当て分減らす（0になる）
-            target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]] - share_time
+              # 曜日側の残り時間を減らす
+              days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]] 
+
+              # 趣味側の残り時間を減らす
+              target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]]
+              target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]]
+            else
+              # 足りなかった場合：次点は残り全部の目標時間を割り当て、足りない分は首位に肩代わりさせる
+              
+              # 次点趣味の残り目標時間全部をスケジュールスロットへ割り当てる
+              hobby_schedule[twotop_hobbies[1]][current_ft] = target_times_slot[twotop_hobbies[1]]
+              # 次点趣味の割り当てに足りなかった時間を求める
+              share_time = adjust_target_times[twotop_hobbies[1]] - target_times_slot[twotop_hobbies[1]]
+
+              # 首位趣味の最終割り当て時間を出して、スケジュールスロットへ割り当てる
+              hobby_schedule[twotop_hobbies[0]][current_ft] = adjust_target_times[twotop_hobbies[0]] + share_time
+
+              # 曜日の自由時間スロットを割り当てた分減らす
+              days_slot[current_ft] -= adjust_target_times[twotop_hobbies[0]] + adjust_target_times[twotop_hobbies[1]]
+              # 首位趣味の残り時間スロットを割り当て分減らす
+              target_times_slot[twotop_hobbies[0]] -= adjust_target_times[twotop_hobbies[0]] + share_time
+              # 次点趣味の残り時間スロットを割り当て分減らす（0になる）
+              target_times_slot[twotop_hobbies[1]] -= adjust_target_times[twotop_hobbies[1]] - share_time
+            end
+            # 最後にグループ内の曜日管理用の添字を追加する
+            day_index += 1
           end
-
-          # 最後にグループ内の曜日管理用の添字を追加する
-          day_index += 1
         end
+        # 配列の中で残り時間が1以上で、一番先頭にある趣味を取得
+        chunk_hobby = sort_hobbies.find{  |hobby| target_times_slot[hobby] > 0 }
       end
-
-      # 配列の中で残り時間が1以上で、一番先頭にある趣味を取得
-      chunk_hobby = sort_hobbies.find{  |hobby| target_times_slot[hobby] > 0 }
+      # 同値グループを一つ進める
+      chunk_index += 1
     end
     # 完成したスケジュールを返す
     hobby_schedule  
