@@ -22,5 +22,8 @@ class ResultsController < ApplicationController
       "D" => { catchphrase: "...", schedule: pattern_d },
       "E" => { catchphrase: "...", schedule: pattern_e }
     }
+
+    # 提案パターンを表にするときに基準にする曜日順リストを生成しておく
+    @sorted_free_times_by_day = FreeTime.order(:day_of_week)
   end
 end
