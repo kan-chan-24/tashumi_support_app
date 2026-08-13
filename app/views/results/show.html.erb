@@ -1,0 +1,32 @@
+<!-- パターン一つずつループする -->
+<% @patterns.each do |pattern_key, pattern_info|  %>
+ <!-- キャッチフレーズを表示する  -->
+ <h2><%= pattern_info[:catchphrase] %></h2>
+ <!-- スケジュール表の材料を取得する -->
+ <% schedule_info = schedule_creator(pattern_info[:schedule], @sorted_free_times_by_day) %>
+ <table>
+  <!-- 見出し（趣味名＋7曜日） -->
+  <thead>
+    <tr>
+      <th>趣味名</th>
+      <% @sorted_free_times_by_day.each do |ft| %>
+        <!-- 7曜日の曜日名を出力 -->
+      <th><%= ft.day_name %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <!-- 表の中身（趣味の値7曜日分） -->  
+  <tbody>
+    <% schedule_info.each do |info_hash| %>
+      <tr>
+        <!-- 行見出し（趣味名） -->
+        <td><%= info_hash[:hobby].name %></td>
+        <% info_hash[:days].values.each do |day_minutes| %>
+          <!-- 見出し趣味の7曜日分の値 -->
+          <td><%= day_minutes %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+ </table>
+<% end %>
