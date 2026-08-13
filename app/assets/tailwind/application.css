@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+/* ベースカラー＋アクセント3段階（薄・中・濃）のグリーン系配色を指定値そのまま採用 */
+@theme {
+  --color-base: #f6f0d7;
+  --color-surface: #c5d89d;
+  --color-surface-hover: #b9cf8a;
+  --color-border-soft: #9cab84;
+
+  --color-ink: #5c5347;
+  --color-ink-muted: #8f8570;
+
+  --color-accent-light: #c5d89d;
+  --color-accent-light-soft: #eaf0dc;
+  --color-accent-mid: #9cab84;
+  --color-accent-dark: #89986d;
+
+  --color-accent-rose: #e2b7ac;
+  --color-accent-rose-soft: #faf0ec;
+
+  /* ミニバーの未達成部分（トラック）用。行の背景（base/accent-light-soft）より一段暗く、白だと埋もれるのを防ぐ */
+  --color-bar-track: #e2d9bb;
+
+  /* ヘッダーの「ハンコ」バッジ専用の赤茶色 */
+  --color-hanko: #a35a42;
+}
