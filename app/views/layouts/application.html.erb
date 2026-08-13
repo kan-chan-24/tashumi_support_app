@@ -23,8 +23,11 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="p-5">
+  <body class="bg-base text-ink font-sans min-h-screen">
+    <header class="bg-surface border-b border-border-soft px-5 py-4">
+      <h1 class="text-lg font-semibold tracking-wide text-ink">Tashumi Support App</h1>
+    </header>
+    <main class="max-w-xl mx-auto p-5">
       <%= render "shared/flash_message"  %>
       <%= yield %>
     </main>

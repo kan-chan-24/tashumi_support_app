@@ -1,23 +1,40 @@
+<h1 class="text-xl font-bold mb-4 text-ink">自由時間を入力する</h1>
+
 <!-- 7曜日分の入力を一括で入れる箱 -->
-<%= form_with url: update_all_free_times_path, method: :patch do |form| %>
-  <ul>
+<%= form_with url: update_all_free_times_path, method: :patch, class: "flex flex-col gap-5" do |form| %>
+  <ul class="flex flex-col gap-4">
     <!-- 7曜日分のループ処理 -->
-    <% @free_times.each do |ft|  %>
-      <li>
-        <!-- 曜日名の表示 -->
-        <%= ft.day_name %>
-        <!-- 自由時間（分数）の入力欄 -->
-        <div class="border-1 mb-2 inline-block">
-          <%= number_field_tag "free_times[#{ft.id}][minutes]",ft.minutes %>
+    <% @free_times.each do |ft| %>
+      <li class="rounded-lg bg-surface px-4 py-3" data-controller="free-time-slider">
+        <div class="mb-2 flex items-center justify-between">
+          <!-- 曜日名の表示（曜日を表す1文字を丸背景に白抜きで強調） -->
+          <span class="flex items-center gap-2">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-accent-dark text-lg font-bold text-white"><%= ft.day_name %></span>
+            <span class="text-sm text-ink-muted">曜日</span>
+          </span>
+          <!-- スライダーの現在値（〇時間〇分）の表示 -->
+          <span class="text-sm text-ink" data-free-time-slider-target="display"></span>
         </div>
+        <!-- 自由時間（15分刻みのスライダー、最大8時間=480分）の入力欄 -->
+        <input
+          type="range"
+          name="free_times[<%= ft.id %>][minutes]"
+          min="0"
+          max="480"
+          step="15"
+          value="<%= ft.minutes %>"
+          data-free-time-slider-target="slider"
+          data-action="input->free-time-slider#updateDisplay"
+          class="w-full accent-accent-mid"
+        >
       </li>
     <% end %>
-  </ul>  
+  </ul>
+
   <!-- 送信ボタン(一括更新パスへ）-->
-  <div class="border-1 mb-2 inline-block">
-    <%= form.submit "更新する" %>
-  </div>
+  <%= form.submit "更新する", class: "self-start rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors cursor-pointer" %>
 <% end %>
-<div class="mb-4 border-1 inline-block">
-  <%= link_to "自由時間の登録を完了する", result_path %>
+
+<div class="mt-6">
+  <%= link_to "自由時間の登録を完了する", result_path, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity" %>
 </div>

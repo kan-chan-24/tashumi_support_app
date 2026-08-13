@@ -1,32 +1,44 @@
-<!-- パターン一つずつループする -->
-<% @patterns.each do |pattern_key, pattern_info|  %>
- <!-- キャッチフレーズを表示する  -->
- <h2><%= pattern_info[:catchphrase] %></h2>
- <!-- スケジュール表の材料を取得する -->
- <% schedule_info = schedule_creator(pattern_info[:schedule], @sorted_free_times_by_day) %>
- <table>
-  <!-- 見出し（趣味名＋7曜日） -->
-  <thead>
-    <tr>
-      <th>趣味名</th>
-      <% @sorted_free_times_by_day.each do |ft| %>
-        <!-- 7曜日の曜日名を出力 -->
-      <th><%= ft.day_name %></th>
-      <% end %>
-    </tr>
-  </thead>
-  <!-- 表の中身（趣味の値7曜日分） -->  
-  <tbody>
-    <% schedule_info.each do |info_hash| %>
-      <tr>
-        <!-- 行見出し（趣味名） -->
-        <td><%= info_hash[:hobby].name %></td>
-        <% info_hash[:days].values.each do |day_minutes| %>
-          <!-- 見出し趣味の7曜日分の値 -->
-          <td><%= day_minutes %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
- </table>
-<% end %>
+<h1 class="text-xl font-bold mb-6 text-ink">結果発表</h1>
+
+<div class="flex flex-col gap-8">
+  <!-- パターン一つずつループする -->
+  <% @patterns.each do |pattern_key, pattern_info| %>
+    <!-- スケジュール表の材料を取得する -->
+    <% schedule_info = schedule_creator(pattern_info[:schedule], @sorted_free_times_by_day) %>
+    <div class="rounded-xl bg-surface p-5 shadow-sm">
+      <!-- キャッチフレーズを表示する -->
+      <div class="mb-4 flex items-center gap-2">
+        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-dark text-sm font-bold text-white"><%= pattern_key %></span>
+        <h2 class="text-lg font-bold text-ink"><%= pattern_info[:catchphrase] %></h2>
+      </div>
+
+      <div class="overflow-x-auto rounded-lg bg-base">
+        <table class="w-full min-w-[560px] border-collapse text-sm">
+          <!-- 見出し（趣味名＋7曜日） -->
+          <thead>
+            <tr class="bg-accent-mid text-white">
+              <th class="px-3 py-2 text-left font-medium">趣味名</th>
+              <% @sorted_free_times_by_day.each do |ft| %>
+                <!-- 7曜日の曜日名を出力 -->
+                <th class="px-3 py-2 text-center font-medium"><%= ft.day_name %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <!-- 表の中身（趣味の値7曜日分） -->
+          <tbody>
+            <% schedule_info.each_with_index do |info_hash, index| %>
+              <tr class="<%= index.even? ? "bg-base" : "bg-accent-light-soft" %> border-b border-border-soft last:border-b-0">
+                <!-- 行見出し（趣味名） -->
+                <td class="px-3 py-2 font-medium text-ink"><%= info_hash[:hobby].name %></td>
+                <% info_hash[:days].values.each do |day_minutes| %>
+                  <!-- 見出し趣味の7曜日分の値（予定なしは薄い色で表示） -->
+                  <td class="px-3 py-2 text-center <%= day_minutes == "❌" ? "text-ink-muted" : "text-ink" %>"><%= day_minutes %></td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
