@@ -21,4 +21,18 @@ module ResultsHelper
       hobby_schedule = { hobby: hobby, days: day_min_set }
     end
   end
+
+  # 分数を「〇時間〇分」表記に変換する（曜日見出しの自由時間表示用）
+  def free_time_label(minutes)
+    hours = minutes / 60
+    remainder = minutes % 60
+
+    if hours.zero?
+      "#{remainder}分"
+    elsif remainder.zero?
+      "#{hours}時間"
+    else
+      "#{hours}時間#{remainder}分"
+    end
+  end
 end

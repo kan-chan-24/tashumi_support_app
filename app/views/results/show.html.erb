@@ -26,8 +26,13 @@
             <tr class="bg-accent-mid text-white">
               <th class="px-3 py-2 text-left font-medium">趣味名</th>
               <% @sorted_free_times_by_day.each do |ft| %>
-                <!-- 7曜日の曜日名を出力 -->
-                <th class="px-3 py-2 text-center font-medium"><%= ft.day_name %></th>
+                <!-- 7曜日の曜日名と、その曜日に設定された自由時間を出力 -->
+                <th class="px-3 py-2 text-center font-medium">
+                  <div class="flex flex-col items-center">
+                    <span><%= ft.day_name %></span>
+                    <span class="text-xs font-normal opacity-80"><%= free_time_label(ft.minutes) %></span>
+                  </div>
+                </th>
               <% end %>
             </tr>
           </thead>
