@@ -10,6 +10,8 @@
   <% @patterns.each do |pattern_key, pattern_info| %>
     <!-- スケジュール表の材料を取得する -->
     <% schedule_info = schedule_creator(pattern_info[:schedule], @sorted_free_times_by_day) %>
+    <!-- ミニバーの基準値。schedule_infoは配分％の高い順に並んでいるため、先頭が最大値 -->
+    <% max_percentage = schedule_info.first[:hobby].percentage %>
     <div class="rounded-xl bg-surface p-5 shadow-sm">
       <!-- キャッチフレーズを表示する -->
       <div class="mb-4 flex items-center gap-2">
@@ -33,8 +35,18 @@
           <tbody>
             <% schedule_info.each_with_index do |info_hash, index| %>
               <tr class="<%= index.even? ? "bg-base" : "bg-accent-light-soft" %> border-b border-border-soft last:border-b-0">
-                <!-- 行見出し（趣味名） -->
-                <td class="px-3 py-2 font-medium text-ink"><%= info_hash[:hobby].name %></td>
+                <!-- 行見出し（趣味名）。一番配分の高い趣味を基準にした相対比率でミニバーを表示し、割合順の並びだと視覚的に伝える -->
+                <td class="px-3 py-2 font-medium text-ink">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span><%= info_hash[:hobby].name %></span>
+                      <span class="text-xs font-normal text-ink-muted"><%= info_hash[:hobby].percentage %>%</span>
+                    </div>
+                    <div class="h-1.5 w-full rounded-full bg-bar-track">
+                      <div class="h-1.5 rounded-full bg-accent-dark" style="width: <%= (info_hash[:hobby].percentage.to_f / max_percentage * 100).round(1) %>%;"></div>
+                    </div>
+                  </div>
+                </td>
                 <% info_hash[:days].values.each do |day_minutes| %>
                   <!-- 見出し趣味の7曜日分の値（予定なしは薄い色で表示） -->
                   <td class="px-3 py-2 text-center <%= day_minutes == "❌" ? "text-ink-muted" : "text-ink" %>"><%= day_minutes %></td>
