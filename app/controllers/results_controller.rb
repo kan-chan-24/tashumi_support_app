@@ -16,11 +16,11 @@ class ResultsController < ApplicationController
 
     # 5パターンをまとめてハッシュにする
     @patterns = {
-      "A" => { catchphrase: "...", schedule: pattern_a },
-      "B" => { catchphrase: "...", schedule: pattern_b },
-      "C" => { catchphrase: "...", schedule: pattern_c },
-      "D" => { catchphrase: "...", schedule: pattern_d },
-      "E" => { catchphrase: "...", schedule: pattern_e }
+      "A" => { catchphrase: "時間をかけたいことは、時間のある日に。", schedule: pattern_a },
+      "B" => { catchphrase: "時間をかけたいことは、毎日の日課に。", schedule: pattern_b },
+      "C" => { catchphrase: "やりたいことを、毎日少しずつ。", schedule: pattern_c },
+      "D" => { catchphrase: "時間のある日に、好きなことを分け合おう。", schedule: pattern_d },
+      "E" => { catchphrase: "毎日の日課に、好きなことを分け合おう。", schedule: pattern_e }
     }
 
     # 提案パターンを表にするときに基準にする曜日順リストを生成しておく

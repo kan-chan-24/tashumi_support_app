@@ -27,7 +27,7 @@
     <header class="bg-surface border-b border-border-soft px-5 py-4">
       <h1 class="text-lg font-semibold tracking-wide text-ink">Tashumi Support App</h1>
     </header>
-    <main class="max-w-xl mx-auto p-5">
+    <main class="<%= content_for(:main_width) || "max-w-xl" %> mx-auto p-5">
       <%= render "shared/flash_message"  %>
       <%= yield %>
     </main>
