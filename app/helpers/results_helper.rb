@@ -22,17 +22,10 @@ module ResultsHelper
     end
   end
 
-  # 分数を「〇時間〇分」表記に変換する（曜日見出しの自由時間表示用）
+  # 分数を「〇h:〇〇」表記に変換する（曜日見出しの自由時間表示用。折り返し防止のためコンパクトな表記にする）
   def free_time_label(minutes)
     hours = minutes / 60
     remainder = minutes % 60
-
-    if hours.zero?
-      "#{remainder}分"
-    elsif remainder.zero?
-      "#{hours}時間"
-    else
-      "#{hours}時間#{remainder}分"
-    end
+    format("%dh:%02d", hours, remainder)
   end
 end

@@ -20,17 +20,18 @@
       </div>
 
       <div class="overflow-x-auto rounded-lg bg-base">
-        <table class="w-full min-w-[560px] border-collapse text-sm">
+        <table class="w-full min-w-[620px] table-fixed border-collapse text-sm">
           <!-- 見出し（趣味名＋7曜日） -->
           <thead>
             <tr class="bg-accent-mid text-white">
-              <th class="px-3 py-2 text-left font-medium">趣味名</th>
+              <!-- 趣味名は5文字までを最小幅・最大幅として固定し、超えた分は見えなくする（table-fixedで列幅を固定） -->
+              <th class="w-36 px-3 py-2 text-left font-medium">趣味名</th>
               <% @sorted_free_times_by_day.each do |ft| %>
                 <!-- 7曜日の曜日名と、その曜日に設定された自由時間を出力 -->
                 <th class="px-3 py-2 text-center font-medium">
                   <div class="flex flex-col items-center">
                     <span><%= ft.day_name %></span>
-                    <span class="text-xs font-normal opacity-80"><%= free_time_label(ft.minutes) %></span>
+                    <span class="whitespace-nowrap text-xs font-normal opacity-80"><%= free_time_label(ft.minutes) %></span>
                   </div>
                 </th>
               <% end %>
@@ -41,11 +42,11 @@
             <% schedule_info.each_with_index do |info_hash, index| %>
               <tr class="<%= index.even? ? "bg-base" : "bg-accent-light-soft" %> border-b border-border-soft last:border-b-0">
                 <!-- 行見出し（趣味名）。一番配分の高い趣味を基準にした相対比率でミニバーを表示し、割合順の並びだと視覚的に伝える -->
-                <td class="px-3 py-2 font-medium text-ink">
+                <td class="w-36 px-3 py-2 font-medium text-ink">
                   <div class="flex flex-col gap-1">
                     <div class="flex items-center justify-between gap-2">
-                      <span><%= info_hash[:hobby].name %></span>
-                      <span class="text-xs font-normal text-ink-muted"><%= info_hash[:hobby].percentage %>%</span>
+                      <span class="truncate"><%= info_hash[:hobby].name %></span>
+                      <span class="shrink-0 text-xs font-normal text-ink-muted"><%= info_hash[:hobby].percentage %>%</span>
                     </div>
                     <div class="h-1.5 w-full rounded-full bg-bar-track">
                       <div class="h-1.5 rounded-full bg-accent-dark" style="width: <%= (info_hash[:hobby].percentage.to_f / max_percentage * 100).round(1) %>%;"></div>
