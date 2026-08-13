@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Tashumi Support App" %></title>
+    <title><%= content_for(:title) || "ズボラさんのなんとなく趣味プランナー" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Tashumi Support App">
+    <meta name="application-name" content="ズボラさんのなんとなく趣味プランナー">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -25,7 +25,10 @@
 
   <body class="bg-base text-ink font-sans min-h-screen">
     <header class="bg-surface border-b border-border-soft px-5 py-4">
-      <h1 class="text-lg font-semibold tracking-wide text-ink">Tashumi Support App</h1>
+      <h1 class="leading-tight text-ink">
+        <span class="mb-1 inline-block -rotate-6 rounded-md border-2 border-hanko px-2 py-0.5 text-sm font-bold text-hanko">ズボラさんの</span>
+        <span class="ml-[1.125rem] block text-lg font-bold tracking-wide">なんとなく趣味プランナー</span>
+      </h1>
     </header>
     <main class="<%= content_for(:main_width) || "max-w-xl" %> mx-auto p-5">
       <%= render "shared/flash_message"  %>

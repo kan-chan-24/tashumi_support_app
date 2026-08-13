@@ -20,4 +20,7 @@
 
   /* ミニバーの未達成部分（トラック）用。行の背景（base/accent-light-soft）より一段暗く、白だと埋もれるのを防ぐ */
   --color-bar-track: #e2d9bb;
+
+  /* ヘッダーの「ハンコ」バッジ専用の赤茶色 */
+  --color-hanko: #a35a42;
 }
