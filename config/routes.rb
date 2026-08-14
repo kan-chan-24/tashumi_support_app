@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # 趣味入力フォーム（一覧 新規登録フォーム 削除）
-  resources :hobbies, only: [ :index, :new, :create, :destroy ]
+  # 趣味入力フォーム（一覧・登録・削除。登録は一覧画面のフォームから非同期で行う）
+  resources :hobbies, only: [ :index, :create, :destroy ]
 
   # 自由時間入力フォーム
   resources :free_times, only: [ :index ] do

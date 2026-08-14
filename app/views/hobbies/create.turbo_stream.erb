@@ -1,0 +1,7 @@
+<%= turbo_stream.update "hobby_list" do %>
+  <%= render "hobby_list" %>
+<% end %>
+
+<%= turbo_stream.replace "hobby_form" do %>
+  <%= render "hobby_form", hobby: Hobby.new %>
+<% end %>
