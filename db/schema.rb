@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_24_034350) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_13_182432) do
   create_table "free_times", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "day_of_week"
@@ -22,6 +22,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_24_034350) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.integer "percentage", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "saved_schedules", force: :cascade do |t|
+    t.string "catchphrase", null: false
+    t.datetime "created_at", null: false
+    t.string "pattern_key", null: false
+    t.json "schedule_data", null: false
     t.datetime "updated_at", null: false
   end
 end

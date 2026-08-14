@@ -1,0 +1,61 @@
+<!-- 7曜日分の表が横に収まるよう、このページだけmainの最大幅を広げる -->
+<% content_for :main_width, "max-w-3xl" %>
+<div>
+  <div class="rounded-xl bg-surface p-5 shadow-sm min-h-48 flex flex-col">
+    <% if @saved_schedule.present? %>
+      <!-- ミニバーの基準値を取得 -->
+      <% max_percentage = @saved_schedule.schedule_data.first["percentage"] %>
+        <!-- キャッチフレーズを表示する -->
+        <div class="mb-4 flex items-center gap-2">
+          <span class="inline-flex shrink-0 items-center rounded-full bg-accent-dark px-3 py-1 text-xs font-bold text-white">いまのスケジュール</span>
+          <h2 class="text-lg font-bold text-ink"><%= @saved_schedule.catchphrase %></h2>
+        </div>
+        <div class="overflow-x-auto rounded-lg bg-base">
+          <table class="w-full min-w-[620px] table-fixed border-collapse text-sm">
+            <!-- 見出し（趣味名＋7曜日） -->
+            <thead>
+              <tr class="bg-accent-mid text-white">
+                <!-- 趣味名は5文字までを最小幅・最大幅として固定し、超えた分は見えなくする（table-fixedで列幅を固定） -->
+                <th class="w-36 px-3 py-2 text-left font-medium">趣味名</th>
+                <% @saved_schedule.schedule_data.first["days"].keys.each do |day_name| %>
+                  <!-- 7曜日の曜日名と、その曜日に設定された自由時間を出力 -->
+                  <th class="px-3 py-2 text-center font-medium">
+                    <div class="flex flex-col items-center">
+                      <span><%= day_name %></span>
+                    </div>
+                  </th>
+                <% end %>
+              </tr>
+            </thead>
+            <!-- 表の中身（趣味の値7曜日分） -->
+            <tbody>
+              <% @saved_schedule.schedule_data.each_with_index do |item, index| %>
+                <tr class="<%= index.even? ? "bg-base" : "bg-accent-light-soft" %> border-b border-border-soft last:border-b-0">
+                  <!-- 行見出し（趣味名） -->
+                  <td class="w-36 px-3 py-2 font-medium text-ink">
+                    <div class="flex flex-col gap-1">
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="truncate"><%= item["hobby_name"]  %></span>
+                        <span class="shrink-0 text-xs font-normal text-ink-muted"><%= item["percentage"] %>%</span>
+                      </div>
+                      <div class="h-1.5 w-full rounded-full bg-bar-track">
+                        <div class="h-1.5 rounded-full bg-accent-dark" style="width: <%= (item["percentage"].to_f / max_percentage * 100).round(1) %>%;"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <% item["days"].values.each do |day_minutes| %>
+                    <!-- 見出し趣味の7曜日分の値（予定なしは薄い色で表示） -->
+                    <td class="px-3 py-2 text-center <%= day_minutes == "❌" ? "text-ink-muted" : "text-ink" %>"><%= day_minutes %></td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+    <% else %>
+      <div class="flex flex-1 items-center justify-center">
+        <p class="inline-flex shrink-0 items-center rounded-full bg-accent-dark px-3 py-1 text-sm font-bold text-white">まだ選択中のスケジュールはありません</p>
+      </div>
+    <% end %> 
+  </div>
+</div>

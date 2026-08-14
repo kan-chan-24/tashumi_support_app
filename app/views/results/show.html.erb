@@ -5,6 +5,8 @@
 <!-- 入力によってはパターン同士が似た結果になることがあるため、事前に一言添えておく -->
 <p class="mb-8 text-xs text-ink-muted">自由時間の入力によって、スケジュール案が似ることがあるよ！参考程度に見比べてね！</p>
 
+<!-- すでにスケジュールがお気に入り登録されてるかを確認 -->
+<% overwrite_confirm_message = SavedSchedule.exists? ? "スケジュールを上書き登録しますか？" : nil %>
 <div class="flex flex-col gap-8">
   <!-- パターン一つずつループする -->
   <% @patterns.each do |pattern_key, pattern_info| %>
@@ -62,6 +64,8 @@
           </tbody>
         </table>
       </div>
+      <!-- お気に入り選択ボタン -->
+      <%= button_to "これをお気に入りにする", saved_schedule_path, params: { pattern_key: pattern_key, catchphrase: pattern_info[:catchphrase], schedule_data: schedule_data_for_save(schedule_info).to_json }, class: "mt-4 rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors cursor-pointer",data: {turbo_confirm: overwrite_confirm_message} %>
     </div>
   <% end %>
 </div>
