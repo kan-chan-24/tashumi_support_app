@@ -7,7 +7,7 @@ class SavedSchedulesController < ApplicationController
   def create
     # 空のスケジュール用の入れ物を用意する
     saved_schedule = SavedSchedule.first_or_initialize
-    
+
     # paramsを受け取る
     saved_schedule.pattern_key = params[:pattern_key]
     saved_schedule.catchphrase =  params[:catchphrase]

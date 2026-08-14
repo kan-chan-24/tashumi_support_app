@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  get "saved_schedules/show"
   get "up" => "rails/health#show", as: :rails_health_check
- 
+
   # 趣味入力フォーム（一覧 新規登録フォーム 削除）
   resources :hobbies, only: [ :index, :new, :create, :destroy ]
 
