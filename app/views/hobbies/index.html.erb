@@ -1,41 +1,13 @@
 <h1 class="text-xl font-bold mb-4 text-ink">登録した趣味一覧</h1>
 
-<!-- 趣味の登録ボタン -->
-<div class="mb-6">
-  <%= link_to "趣味を登録する", new_hobby_path, class: "inline-block rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors" %>
+<!-- 趣味の登録フォーム（非同期送信） -->
+<%= render "hobby_form", hobby: @hobby %>
+
+<!-- Turbo Streamでの差し替え先。常にこのidがページ上に存在する必要がある -->
+<div id="hobby_list">
+  <% if @hobbies.empty? %>
+    <p class="text-ink-muted">趣味を登録してください</p>
+  <% else %>
+    <%= render "hobby_list" %>
+  <% end %>
 </div>
-
-<!-- 趣味の登録がない場合 -->
-<% if @hobbies.empty? %>
-  <p class="text-ink-muted">趣味を登録してください</p>
-<!-- 趣味の登録がある場合 -->
-<% else %>
-  <!-- 円グラフ＋凡例 -->
-  <div class="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-    <div
-      class="h-40 w-40 shrink-0 rounded-full border-4 border-base shadow-inner"
-      style="background: <%= hobby_pie_chart_gradient(@hobbies) %>;"
-    ></div>
-    <ul class="flex flex-col gap-2">
-      <% hobby_pie_chart_legend(@hobbies).each do |entry| %>
-        <li class="flex items-center gap-2 text-sm text-ink">
-          <span class="inline-block h-3 w-3 rounded-full" style="background-color: <%= entry[:color] %>;"></span>
-          <%= entry[:hobby].name %>（<%= entry[:hobby].percentage %>%）
-        </li>
-      <% end %>
-    </ul>
-  </div>
-
-  <!-- 趣味一覧 -->
-  <ul class="mb-6 flex flex-col gap-3">
-    <% @hobbies.each do |hobby| %>
-      <li class="flex items-center justify-between rounded-lg bg-surface px-4 py-3">
-        <span class="text-ink"><%= hobby.name %>（<%= hobby.percentage %>%）</span>
-        <!-- 削除ボタン -->
-        <%= button_to "削除", hobby_path(hobby), method: :delete, class: "rounded-full bg-accent-rose-soft px-3 py-1 text-xs text-ink hover:bg-accent-rose transition-colors" %>
-      </li>
-    <% end %>
-  </ul>
-
-  <%= link_to "趣味の登録を完了する", free_times_path, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity" %>
-<% end %>

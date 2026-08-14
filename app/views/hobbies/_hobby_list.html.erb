@@ -1,0 +1,68 @@
+<div data-controller="hobby-allocator">
+  <!-- 円グラフ＋凡例＋合計％表示 -->
+  <div class="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+    <div
+      class="h-40 w-40 shrink-0 rounded-full border-4 border-base shadow-inner"
+      style="background: <%= hobby_pie_chart_gradient(@hobbies) %>;"
+      data-hobby-allocator-target="pieChart"
+    ></div>
+    <div class="flex flex-col gap-2">
+      <ul class="flex flex-col gap-2">
+        <% hobby_pie_chart_legend(@hobbies).each do |entry| %>
+          <li class="flex items-center gap-2 text-sm text-ink">
+            <span class="inline-block h-3 w-3 rounded-full" style="background-color: <%= entry[:color] %>;"></span>
+            <%= entry[:hobby].name %>（<span data-hobby-allocator-target="legendPercentage"><%= entry[:hobby].percentage %></span>%）
+          </li>
+        <% end %>
+      </ul>
+      <!-- 合計％のリアルタイム表示（強調、100%達成時だけ色が変わる） -->
+      <p class="text-2xl font-bold text-accent-dark" data-hobby-allocator-target="totalWrapper">
+        合計：<span data-hobby-allocator-target="totalDisplay"><%= @hobbies.sum(&:percentage) %></span>%
+      </p>
+    </div>
+  </div>
+
+  <!-- 趣味一覧（スライダー付き） -->
+  <ul class="mb-6 flex flex-col gap-3">
+    <% @hobbies.each do |hobby| %>
+      <li class="rounded-lg bg-surface px-4 py-3">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-ink"><%= hobby.name %></span>
+          <div class="flex items-center gap-3">
+            <!-- スライダーの現在値（％）の直接入力欄 -->
+            <div class="flex items-center gap-1">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value="<%= hobby.percentage %>"
+                data-hobby-allocator-target="percentageDisplay"
+                data-action="input->hobby-allocator#updateFromInput"
+                class="w-16 rounded-lg border border-border-soft bg-base px-2 py-1 text-sm text-ink text-right focus:outline-none focus:ring-2 focus:ring-accent-mid"
+              >
+              <span class="text-sm text-ink-muted">%</span>
+            </div>
+            <!-- 削除ボタン -->
+            <%= button_to "削除", hobby_path(hobby), method: :delete, class: "rounded-full bg-accent-rose-soft px-3 py-1 text-xs text-ink hover:bg-accent-rose transition-colors" %>
+          </div>
+        </div>
+        <!-- 配分％を調整するスライダー -->
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="1"
+          value="<%= hobby.percentage %>"
+          data-hobby-allocator-target="slider"
+          data-action="input->hobby-allocator#updateAll"
+          class="w-full accent-accent-mid"
+        >
+      </li>
+    <% end %>
+  </ul>
+
+  <!-- スライダー操作時の注意書き -->
+  <p class="mb-4 text-xs text-ink-muted">趣味の合計％が100%になるようにしてください</p>
+
+  <%= link_to "趣味の登録を完了する", free_times_path, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity", data: { hobby_allocator_target: "submitButton" } %>
+</div>
