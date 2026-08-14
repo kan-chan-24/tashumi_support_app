@@ -23,7 +23,8 @@ export default class extends Controller {
   updateFromInput(event) {
     const index = this.percentageDisplayTargets.indexOf(event.target)
     this.sliderTargets[index].value = event.target.value
-    this.updateAll()
+    // 今まさに入力中の要素自身には値を書き戻さない（カーソル位置がリセットされ、入力を邪魔してしまうため）
+    this.updateAll(event.target)
   }
 
   // 趣味の追加・削除フォームが送信される直前、現在の全スライダーの値を
@@ -40,12 +41,14 @@ export default class extends Controller {
     })
   }
 
-  updateAll() {
+  updateAll(skipElement = null) {
     const values = this.sliderTargets.map((slider) => Number(slider.value))
     const total = values.reduce((sum, value) => sum + value, 0)
 
     values.forEach((value, index) => {
-      this.percentageDisplayTargets[index].value = value
+      if (this.percentageDisplayTargets[index] !== skipElement) {
+        this.percentageDisplayTargets[index].value = value
+      }
       this.legendPercentageTargets[index].textContent = value
     })
 

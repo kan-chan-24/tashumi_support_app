@@ -40,6 +40,18 @@ class HobbiesController < ApplicationController
     redirect_to hobbies_path, notice: "削除しました"
   end
 
+  def confirm
+    # スライダーの調整値を保存してから自由時間入力画面へ進む
+    update_existing_percentages
+    redirect_to free_times_path
+  end
+
+  def reset
+    # 既存の趣味データを全部消して、まっさらな状態で診断を始め直す
+    Hobby.destroy_all
+    redirect_to hobbies_path
+  end
+
   private
 
   def hobby_params

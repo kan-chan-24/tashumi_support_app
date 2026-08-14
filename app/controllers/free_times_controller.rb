@@ -11,7 +11,11 @@ class FreeTimesController < ApplicationController
       # 見つけたレコードのminutesを、timeから取り出した数字で更新する
       @free_time.update(minutes: time[:minutes])
     end
-    # 結果発表画面へ遷移
-    redirect_to result_path
+    # 「趣味登録へ戻る」ボタンから来た場合は趣味登録画面へ、それ以外は結果発表画面へ遷移
+    if params[:back]
+      redirect_to hobbies_path
+    else
+      redirect_to result_path
+    end
   end
 end
