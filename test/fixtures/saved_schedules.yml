@@ -1,6 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  user: one
   pattern_key: A
   catchphrase: 時間をかけたいことは、時間のある日に。
   schedule_data:
@@ -16,6 +17,7 @@ one:
         土: 240分
 
 two:
+  user: two
   pattern_key: B
   catchphrase: 時間をかけたいことは、毎日の日課に。
   schedule_data:

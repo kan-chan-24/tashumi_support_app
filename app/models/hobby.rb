@@ -1,4 +1,6 @@
 class Hobby < ApplicationRecord
+  belongs_to :user
+
   # 趣味の名前：空NG
   validates :name, presence: true
   # 割合：空NG、数字チェック（整数かつ1~100までの数字のみを許可)

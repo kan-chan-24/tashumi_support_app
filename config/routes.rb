@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resource :session
+  # サインアップ（新規登録）
+  resources :users, only: [ :new, :create ]
   get "up" => "rails/health#show", as: :rails_health_check
 
   # 趣味入力フォーム（一覧・登録・削除。登録は一覧画面のフォームから非同期で行う）

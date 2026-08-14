@@ -1,14 +1,15 @@
 class PatternAbCalculator
   # newに呼応して発動
-  def initialize(target_times:, sort_direction:)
+  def initialize(target_times:, free_times:, sort_direction:)
     # インスタンス変数に変換
     @target_times = target_times
+    @free_times = free_times
     @sort_direction = sort_direction
   end
 
-  # 外部からこのクラスが呼ばれると最初に走るメソッド（目標時間リストとソートの向きが渡される）
-  def self.call(target_times:, sort_direction:)
-    new(target_times: target_times, sort_direction: sort_direction).call
+  # 外部からこのクラスが呼ばれると最初に走るメソッド（目標時間リストと自由時間リスト、ソートの向きが渡される）
+  def self.call(target_times:, free_times:, sort_direction:)
+    new(target_times: target_times, free_times: free_times, sort_direction: sort_direction).call
   end
 
   # self.callからcallへ
@@ -21,9 +22,9 @@ class PatternAbCalculator
 
   # 提案パターンABの計算処理メソッド
   def pattern_ab_calculator
-    # 趣味と自由時間のリストを全て取得しておく
-    hobby_all = Hobby.all
-    freetime_all = FreeTime.all
+    # 趣味と自由時間のリストを全て取得しておく（ログイン中のユーザーの分だけ、呼び出し元から渡された値を使う）
+    hobby_all = @target_times.keys
+    freetime_all = @free_times
 
     # 曜日の並び替え（自由時間の長い順：同値なら曜日番号）
     # sort_direcitonの値（シンボル）でソート方向を場合分けする
