@@ -1,4 +1,4 @@
-<%= form_with model: hobby, id: "hobby_form", class: "mb-6 flex items-center gap-3" do |form| %>
+<%= form_with model: hobby, id: "hobby_form", class: "mb-6 flex items-center gap-3", data: { action: "submit->hobby-allocator#addSliderValues" } do |form| %>
   <%= form.text_field :name, placeholder: "趣味の名前", class: "rounded-lg border border-border-soft bg-base px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-accent-mid" %>
   <%= form.submit "趣味を登録する", class: "inline-block rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors cursor-pointer" %>
 <% end %>

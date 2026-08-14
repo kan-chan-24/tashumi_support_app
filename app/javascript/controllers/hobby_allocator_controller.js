@@ -26,6 +26,20 @@ export default class extends Controller {
     this.updateAll()
   }
 
+  // 趣味の追加・削除フォームが送信される直前、現在の全スライダーの値を
+  // hidden fieldとしてそのフォームに追加する（DBへの暫定保存のため）
+  addSliderValues(event) {
+    const form = event.target
+
+    this.sliderTargets.forEach((slider) => {
+      const hiddenField = document.createElement("input")
+      hiddenField.type = "hidden"
+      hiddenField.name = `existing_percentages[${slider.dataset.hobbyId}]`
+      hiddenField.value = slider.value
+      form.appendChild(hiddenField)
+    })
+  }
+
   updateAll() {
     const values = this.sliderTargets.map((slider) => Number(slider.value))
     const total = values.reduce((sum, value) => sum + value, 0)

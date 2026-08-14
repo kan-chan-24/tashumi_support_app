@@ -1,13 +1,16 @@
 <h1 class="text-xl font-bold mb-4 text-ink">登録した趣味一覧</h1>
 
-<!-- 趣味の登録フォーム（非同期送信） -->
-<%= render "hobby_form", hobby: @hobby %>
+<!-- フォーム・削除ボタンからも暫定保存のアクションを呼べるよう、コントローラーの範囲をここまで広げる -->
+<div data-controller="hobby-allocator">
+  <!-- 趣味の登録フォーム（非同期送信） -->
+  <%= render "hobby_form", hobby: @hobby %>
 
-<!-- Turbo Streamでの差し替え先。常にこのidがページ上に存在する必要がある -->
-<div id="hobby_list">
-  <% if @hobbies.empty? %>
-    <p class="text-ink-muted">趣味を登録してください</p>
-  <% else %>
-    <%= render "hobby_list" %>
-  <% end %>
+  <!-- Turbo Streamでの差し替え先。常にこのidがページ上に存在する必要がある -->
+  <div id="hobby_list">
+    <% if @hobbies.empty? %>
+      <p class="text-ink-muted">趣味を登録してください</p>
+    <% else %>
+      <%= render "hobby_list" %>
+    <% end %>
+  </div>
 </div>

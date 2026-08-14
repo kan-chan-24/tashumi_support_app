@@ -1,4 +1,4 @@
-<div data-controller="hobby-allocator">
+<div>
   <!-- 円グラフ＋凡例＋合計％表示 -->
   <div class="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
     <div
@@ -43,7 +43,7 @@
               <span class="text-sm text-ink-muted">%</span>
             </div>
             <!-- 削除ボタン -->
-            <%= button_to "削除", hobby_path(hobby), method: :delete, class: "rounded-full bg-accent-rose-soft px-3 py-1 text-xs text-ink hover:bg-accent-rose transition-colors" %>
+            <%= button_to "削除", hobby_path(hobby), method: :delete, form: { data: { action: "submit->hobby-allocator#addSliderValues" } }, class: "rounded-full bg-accent-rose-soft px-3 py-1 text-xs text-ink hover:bg-accent-rose transition-colors" %>
           </div>
         </div>
         <!-- 配分％を調整するスライダー -->
@@ -53,6 +53,7 @@
           max="100"
           step="1"
           value="<%= hobby.percentage %>"
+          data-hobby-id="<%= hobby.id %>"
           data-hobby-allocator-target="slider"
           data-action="input->hobby-allocator#updateAll"
           class="w-full accent-accent-mid"
