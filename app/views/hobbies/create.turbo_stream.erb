@@ -3,5 +3,5 @@
 <% end %>
 
 <%= turbo_stream.replace "hobby_form" do %>
-  <%= render "hobby_form", hobby: Hobby.new %>
+  <%= render "hobby_form", hobby: Current.user.hobbies.new %>
 <% end %>

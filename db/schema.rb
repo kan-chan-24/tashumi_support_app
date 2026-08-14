@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_13_182432) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_140717) do
   create_table "free_times", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "day_of_week"
     t.integer "minutes"
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_free_times_on_user_id"
   end
 
   create_table "hobbies", force: :cascade do |t|
@@ -23,6 +25,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_182432) do
     t.string "name", null: false
     t.integer "percentage", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_hobbies_on_user_id"
   end
 
   create_table "saved_schedules", force: :cascade do |t|
@@ -31,5 +35,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_13_182432) do
     t.string "pattern_key", null: false
     t.json "schedule_data", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_saved_schedules_on_user_id"
   end
+
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "nickname", null: false
+    t.string "password_digest", null: false
+    t.datetime "updated_at", null: false
+    t.index ["nickname"], name: "index_users_on_nickname", unique: true
+  end
+
+  add_foreign_key "free_times", "users"
+  add_foreign_key "hobbies", "users"
+  add_foreign_key "saved_schedules", "users"
+  add_foreign_key "sessions", "users"
 end

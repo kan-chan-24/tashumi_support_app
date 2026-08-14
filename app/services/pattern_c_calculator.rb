@@ -1,12 +1,12 @@
 class PatternCCalculator
-  def initialize(target_times:)
-    # 目標時間をインスタンス変数に変換
+  def initialize(target_times:, free_times:)
+    # 目標時間・自由時間をインスタンス変数に変換
     @target_times = target_times
+    @free_times = free_times
   end
 
-  def self.call(target_times:)
-    # 目標時間だけを引数でもらってくる（向きは不要）
-    new(target_times: target_times).call
+  def self.call(target_times:, free_times:)
+    new(target_times: target_times, free_times: free_times).call
   end
 
   def call
@@ -17,9 +17,9 @@ class PatternCCalculator
   private
 
   def pattern_c_calculator
-    # 趣味と自由時間を全件リストで取得
-    hobby_all = Hobby.all
-    freetime_all = FreeTime.all
+    # 趣味と自由時間のリストを全て取得しておく（ログイン中のユーザーの分だけ、呼び出し元から渡された値を使う）
+    hobby_all = @target_times.keys
+    freetime_all = @free_times
 
     # 曜日のソートを行う（day_of_weekの昇順：同値はないので第二条件なし）
     sort_days = freetime_all.sort_by { |ft|[ ft.day_of_week ] }

@@ -1,11 +1,12 @@
 class PatternDeCalculator
-  def initialize(target_times:, sort_direction:)
+  def initialize(target_times:, free_times:, sort_direction:)
     @target_times = target_times
+    @free_times = free_times
     @sort_direction = sort_direction
   end
 
-  def self.call(target_times:, sort_direction:)
-    new(target_times: target_times, sort_direction: sort_direction).call
+  def self.call(target_times:, free_times:, sort_direction:)
+    new(target_times: target_times, free_times: free_times, sort_direction: sort_direction).call
   end
 
   def call
@@ -15,9 +16,9 @@ class PatternDeCalculator
   private
 
   def pattern_de_calculator
-    # 趣味と自由時間の全件を取得しておく
-    hobby_all = Hobby.all
-    freetime_all = FreeTime.all
+    # 趣味と自由時間のリストを全て取得しておく（ログイン中のユーザーの分だけ、呼び出し元から渡された値を使う）
+    hobby_all = @target_times.keys
+    freetime_all = @free_times
 
     # 曜日のソート（ソートの向き引数で場合分け）
     if @sort_direction == :desc
