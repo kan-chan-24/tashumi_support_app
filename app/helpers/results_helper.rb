@@ -28,4 +28,11 @@ module ResultsHelper
     remainder = minutes % 60
     format("%dh:%02d", hours, remainder)
   end
+
+  # スケジュールを保存するための形に変換するためのメソッド
+  def schedule_data_for_save(schedule_info)
+    schedule_info.map do |info_hash|
+      saved_schedule_data = { hobby_name: info_hash[:hobby].name, percentage: info_hash[:hobby].percentage, days: info_hash[:days] }
+    end
+  end
 end
