@@ -2,7 +2,14 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # 趣味入力フォーム（一覧・登録・削除。登録は一覧画面のフォームから非同期で行う）
-  resources :hobbies, only: [ :index, :create, :destroy ]
+  resources :hobbies, only: [ :index, :create, :destroy ] do
+    collection do
+      # スライダーの調整値を保存してから自由時間入力画面へ進む
+      patch :confirm
+      # 既存の趣味データを全部消して、まっさらな状態で診断を始め直す
+      delete :reset
+    end
+  end
 
   # 自由時間入力フォーム
   resources :free_times, only: [ :index ] do

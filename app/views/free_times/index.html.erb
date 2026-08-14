@@ -31,6 +31,9 @@
     <% end %>
   </ul>
 
-  <!-- 送信ボタン(一括更新パスへ）-->
-  <%= form.submit "スケジュール提案へ進む", class: "self-start rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors cursor-pointer" %>
+  <!-- 送信ボタン群。formactionで送信先を分け、どちらを押しても保存してから遷移する -->
+  <div class="flex items-center gap-4">
+    <%= form.submit "← 趣味登録へ戻る", formaction: update_all_free_times_path(back: true), formnovalidate: true, class: "rounded-full bg-base border border-border-soft px-4 py-2 text-sm font-medium text-ink-muted hover:text-ink transition-colors cursor-pointer" %>
+    <%= form.submit "スケジュール提案へ進む", class: "rounded-full bg-accent-mid px-4 py-2 text-sm font-medium text-base hover:bg-accent-dark transition-colors cursor-pointer" %>
+  </div>
 <% end %>

@@ -56,6 +56,11 @@
       <div class="flex flex-1 items-center justify-center">
         <p class="inline-flex shrink-0 items-center rounded-full bg-accent-dark px-3 py-1 text-sm font-bold text-white">まだ選択中のスケジュールはありません</p>
       </div>
-    <% end %> 
+    <% end %>
+  </div>
+
+  <!-- 趣味登録画面（診断のスタート地点）への導線。前回の趣味データは使い回さない想定で、常に新しく始める -->
+  <div class="mt-6">
+    <%= button_to "診断する", reset_hobbies_path, method: :delete, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity" %>
   </div>
 </div>
