@@ -11,6 +11,7 @@ class FreeTimesController < ApplicationController
       # 見つけたレコードのminutesを、timeから取り出した数字で更新する
       @free_time.update(minutes: time[:minutes])
     end
-    redirect_to free_times_path, notice: "更新しました"
+    # 結果発表画面へ遷移
+    redirect_to result_path
   end
 end
