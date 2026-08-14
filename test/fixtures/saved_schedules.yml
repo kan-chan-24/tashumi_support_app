@@ -1,11 +1,31 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  pattern_key: MyString
-  catchphrase: MyString
-  schedule_data: 
+  pattern_key: A
+  catchphrase: 時間をかけたいことは、時間のある日に。
+  schedule_data:
+    - hobby_name: ゲーム
+      percentage: 50
+      days:
+        日: 240分
+        月: 60分
+        火: ❌
+        水: ❌
+        木: ❌
+        金: ❌
+        土: 240分
 
 two:
-  pattern_key: MyString
-  catchphrase: MyString
-  schedule_data: 
+  pattern_key: B
+  catchphrase: 時間をかけたいことは、毎日の日課に。
+  schedule_data:
+    - hobby_name: 筋トレ
+      percentage: 30
+      days:
+        日: ❌
+        月: 60分
+        火: 120分
+        水: 120分
+        木: 30分
+        金: ❌
+        土: ❌
