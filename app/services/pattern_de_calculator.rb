@@ -126,17 +126,17 @@ class PatternDeCalculator
             if twotop_hobbies.length < 2
               # 目標時間と自由時間から小さい方を取得
               assign_minutes = [ target_times_slot[chunk_hobby], days_slot[current_ft] ].min
-              
+
               # スケジュールに小さい方の時間を割り当てる
               hobby_schedule[chunk_hobby][current_ft] = assign_minutes
-              
+
               # 残り枠（スロット）を割り当てた分減らす
               days_slot[current_ft] -= assign_minutes
               target_times_slot[chunk_hobby] -= assign_minutes
-              
+
               # 曜日を一つ進める
               day_index += 1
-              
+
               # 今回のループにもう用はないので、次のループへ進める
               next
             end
