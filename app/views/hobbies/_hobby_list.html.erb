@@ -63,7 +63,7 @@
   </ul>
 
   <!-- スライダー操作時の注意書き -->
-  <p class="mb-4 text-xs text-ink-muted">趣味の合計％が100%になるようにしてください</p>
+  <p class="mb-4 text-xs text-ink-muted">趣味の合計％が100%になるようにしてね。</p>
 
   <%= button_to "趣味の登録を完了する", confirm_hobbies_path, method: :patch, form: { data: { action: "submit->hobby-allocator#addSliderValues" } }, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity", data: { hobby_allocator_target: "submitButton" } %>
 </div>

@@ -1,6 +1,8 @@
-<% flash.each do |type, message| %>
-  <% is_notice = type.to_s == "notice" %>
-  <p class="mb-4 rounded-lg px-4 py-3 text-sm <%= is_notice ? 'bg-accent-light-soft text-ink' : 'bg-accent-rose-soft text-ink' %>">
-    <%= message %>
-  </p>
-<% end %>
+<div id="flash_message">
+  <% flash.each do |type, message| %>
+    <% is_notice = type.to_s == "notice" %>
+    <p class="mb-4 rounded-lg px-4 py-3 text-sm <%= is_notice ? 'bg-accent-light-soft text-ink' : 'bg-accent-rose-soft text-ink' %>">
+      <%= message %>
+    </p>
+  <% end %>
+</div>

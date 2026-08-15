@@ -1,9 +1,11 @@
 <!-- 7曜日分の表が横に収まるよう、このページだけmainの最大幅を広げる -->
 <% content_for :main_width, "max-w-3xl" %>
 
-<h1 class="text-3xl font-bold mb-2 text-ink">結果発表</h1>
+<h1 class="text-3xl font-bold mb-2 text-ink">なんとなくの週間プランを考えたよ。</h1>
+<p>気に入ったプランがあったら選択してね。</p>
+<br>
 <!-- 入力によってはパターン同士が似た結果になることがあるため、事前に一言添えておく -->
-<p class="mb-8 text-xs text-ink-muted">自由時間の入力によって、スケジュール案が似ることがあるよ！参考程度に見比べてね！</p>
+<p class="mb-8 text-xs text-ink-muted">入力内容によって、プランが似ることがあるよ。参考ぐらいに見てみてね。</p>
 
 <!-- すでにスケジュールがお気に入り登録されてるかを確認 -->
 <% overwrite_confirm_message = Current.user.saved_schedule.present? ? "スケジュールを上書き登録しますか？" : nil %>

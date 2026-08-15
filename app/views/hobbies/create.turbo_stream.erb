@@ -5,3 +5,7 @@
 <%= turbo_stream.replace "hobby_form" do %>
   <%= render "hobby_form", hobby: Current.user.hobbies.new %>
 <% end %>
+
+<%= turbo_stream.replace "flash_message" do %>
+  <%= render "shared/flash_message" %>
+<% end %>

@@ -1,5 +1,40 @@
 <!-- 7曜日分の表が横に収まるよう、このページだけmainの最大幅を広げる -->
 <% content_for :main_width, "max-w-3xl" %>
+
+<!-- アプリの簡単な説明。初めての人が「試しにやってみよう」と思えるような、柔らかい語りかけの文章 -->
+<div class="mb-6 flex flex-col items-center gap-1 text-center text-base font-bold text-ink text-balance sm:text-lg">
+  <p>「趣味がたくさんあって時間が足りない！」</p>
+  <p>「時間割を決めるのはちょっと大変」</p>
+  <br>
+  <p>そんなズボラさんの相棒アプリ。</p>
+  <p>あなたがするのは、趣味と自由時間を入れるだけ。</p>
+  <p>あとはアプリにおまかせ。</p>
+  <br>
+  <p>なんとなくの週間プランを提案してくれます。</p>
+</div>
+
+<!-- 使い方案内。初めての人にもわかるよう3ステップで簡潔に示す -->
+<div class="mb-3 flex flex-col items-center gap-1">
+  <h2 class="text-base font-bold text-ink">このアプリの使い方。</h2>
+  <span class="w-24 border-t-2 border-dotted border-accent-dark"></span>
+</div>
+<div class="mb-6 flex flex-col items-center">
+  <div class="flex flex-col items-start gap-2">
+    <div class="flex items-center gap-3">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-dark text-xl font-bold text-white">1</span>
+      <p class="text-base font-bold text-ink">趣味の配分を決める</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-dark text-xl font-bold text-white">2</span>
+      <p class="text-base font-bold text-ink">１週間の自由時間を入れる</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-dark text-xl font-bold text-white">3</span>
+      <p class="text-base font-bold text-ink">気に入った週間プランを選ぶだけ</p>
+    </div>
+  </div>
+</div>
+
 <div>
   <div class="rounded-xl bg-surface p-5 shadow-sm min-h-48 flex flex-col">
     <% if @saved_schedule.present? %>
@@ -60,7 +95,7 @@
   </div>
 
   <!-- 趣味登録画面（診断のスタート地点）への導線。前回の趣味データは使い回さない想定で、常に新しく始める -->
-  <div class="mt-6">
-    <%= button_to "診断する", reset_hobbies_path, method: :delete, class: "inline-block rounded-full bg-accent-dark px-4 py-2 text-sm font-medium text-base hover:opacity-90 transition-opacity" %>
+  <div class="mt-6 flex justify-center">
+    <%= button_to "プランを提案してもらう", reset_hobbies_path, method: :delete, class: "inline-block rounded-full bg-accent-dark px-8 py-4 text-lg font-bold text-base hover:opacity-90 transition-opacity" %>
   </div>
 </div>
