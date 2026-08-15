@@ -124,8 +124,21 @@ class PatternDeCalculator
             twotop_hobbies = sort_hobbies.select { |hobby| target_times_slot[hobby] > 0 }.first(2)
             # 次点趣味を取得できたかをチェックする（次点がない場合比率分割ができないため）
             if twotop_hobbies.length < 2
-              # 趣味配列の要素数が2未満（つまり2つの趣味が取得できてない）ならループを抜ける
-              break
+              # 目標時間と自由時間から小さい方を取得
+              assign_minutes = [ target_times_slot[chunk_hobby], days_slot[current_ft] ].min
+              
+              # スケジュールに小さい方の時間を割り当てる
+              hobby_schedule[chunk_hobby][current_ft] = assign_minutes
+              
+              # 残り枠（スロット）を割り当てた分減らす
+              days_slot[current_ft] -= assign_minutes
+              target_times_slot[chunk_hobby] -= assign_minutes
+              
+              # 曜日を一つ進める
+              day_index += 1
+              
+              # 今回のループにもう用はないので、次のループへ進める
+              next
             end
 
             # 「首位趣味％：次点趣味％」の比率で2趣味を割り、丸め前の単位を出す
