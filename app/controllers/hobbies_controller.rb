@@ -14,7 +14,6 @@ class HobbiesController < ApplicationController
     if last_hobby
       # あるなら、最後尾の趣味の半分の％で趣味を追加する
       half_percentage = last_hobby.percentage / 2
-      last_hobby.update(percentage: last_hobby.percentage - half_percentage)
       @hobby = Current.user.hobbies.new(name: hobby_params[:name], percentage: half_percentage)
     else
       # ないなら、100%で入れる
@@ -22,6 +21,9 @@ class HobbiesController < ApplicationController
     end
 
     if @hobby.save
+      if last_hobby
+        last_hobby.update(percentage: last_hobby.percentage - half_percentage)
+      end
       @hobbies = Current.user.hobbies.order(:id)
       respond_to do |format|
         format.turbo_stream

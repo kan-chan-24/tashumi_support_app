@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // 趣味の配分％スライダーを操作すると、合計％表示・円グラフ・
 // 「次へ進む」ボタンの有効/無効をリアルタイムで更新する
 export default class extends Controller {
-  static targets = ["slider", "percentageDisplay", "legendPercentage", "pieChart", "totalDisplay", "totalWrapper", "submitButton"]
+  static targets = ["slider", "percentageDisplay", "legendPercentage", "pieChart", "totalDisplay", "totalWrapper", "submitButton", "nameInput", "addButton"]
 
   // 円グラフのセグメント色。hobbies_helper.rbのPIE_CHART_COLORSと同じ並びにする
   colors = [
@@ -17,6 +17,7 @@ export default class extends Controller {
 
   connect() {
     this.updateAll()
+    this.updateAddButton()
   }
 
   // 数値入力欄が変更されたとき、同じ趣味のスライダーにも値を反映してから全体を更新する
@@ -81,6 +82,15 @@ export default class extends Controller {
       this.submitButtonTarget.classList.remove("opacity-50", "pointer-events-none")
     } else {
       this.submitButtonTarget.classList.add("opacity-50", "pointer-events-none")
+    }
+  }
+
+  // 趣味名の入力欄が空文字（スペースのみ含む）のときは、登録ボタンをグレーアウトして押せなくする
+  updateAddButton() {
+    if (this.nameInputTarget.value.trim() === "") {
+      this.addButtonTarget.classList.add("opacity-50", "pointer-events-none")
+    } else {
+      this.addButtonTarget.classList.remove("opacity-50", "pointer-events-none")
     }
   }
 

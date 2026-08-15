@@ -1,4 +1,4 @@
-<h1 class="text-xl font-bold mb-4 text-ink">登録した趣味一覧</h1>
+<h1 class="text-base font-bold mb-4 text-ink sm:text-xl">趣味を思いつくだけ入れて、<br>それぞれのやりたい度合いを％で教えてね。</h1>
 
 <!-- TOPページへ戻るリンク -->
 <div class="mb-4">
@@ -13,7 +13,7 @@
   <!-- Turbo Streamでの差し替え先。常にこのidがページ上に存在する必要がある -->
   <div id="hobby_list">
     <% if @hobbies.empty? %>
-      <p class="text-ink-muted">趣味を登録してください</p>
+      <p class="text-ink-muted">趣味を登録してね</p>
     <% else %>
       <%= render "hobby_list" %>
     <% end %>
